@@ -6,6 +6,6 @@ file(GLOB_RECURSE sources src/*.cpp)
 file(GLOB_RECURSE inlines src/*.inl)
 set(source_files ${headers} ${sources} ${inlines})
 
-include_directories(external/Eigen/ src/)
+include_directories(external/Eigen/ external/Ponca/src src/)
 
 add_executable(hello ${source_files})
