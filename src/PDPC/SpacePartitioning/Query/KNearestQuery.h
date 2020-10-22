@@ -2,7 +2,7 @@
 
 #include <PDPC/SpacePartitioning/internal/IndexSquaredDistance.h>
 
-#include <PDPC/Common/limited_priority_queue.h>
+#include <PDPC/Common/Containers/limited_priority_queue.h>
 
 namespace pdpc {
 

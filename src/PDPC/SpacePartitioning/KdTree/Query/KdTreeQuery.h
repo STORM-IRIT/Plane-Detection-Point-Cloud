@@ -1,7 +1,7 @@
 #pragma once
 
 #include <PDPC/SpacePartitioning/internal/IndexSquaredDistance.h>
-#include <PDPC/Common/static_stack.h>
+#include <PDPC/Common/Containers/static_stack.h>
 
 #define PDPC_KDTREE_MAX_DEPTH 32
 
