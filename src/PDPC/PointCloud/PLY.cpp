@@ -249,7 +249,7 @@ bool PLY::save(const std::string& filename, const PointCloud& g, bool v, bool bi
         ply.set_ascii();
     }
 
-    ply.add_comment("PCP");
+    ply.add_comment("PDPC");
     ply.add_element("vertex", g.point_count());
     ply.add_element("face", g.face_count());
 
