@@ -1041,17 +1041,15 @@ void PointCloud::clear_knn_graph()
 
 void PointCloud::build_kdtree()
 {
-    // TODO
-//    m_kdtree = std::make_shared<KdTree>(m_points);
+    m_kdtree = std::make_shared<KdTree>(m_points);
 }
 
 void PointCloud::build_knn_graph(int k, bool keep_kdtree)
 {
     if(!has_kdtree()) build_kdtree();
 
-    // TODO
-//    m_knngraph = std::make_shared<KnnGraph>(k);
-//    m_knngraph->build(*m_kdtree);
+    m_knngraph = std::make_shared<KnnGraph>(k);
+    m_knngraph->build(*m_kdtree);
 
     if(!keep_kdtree) clear_kdtree();
 }
