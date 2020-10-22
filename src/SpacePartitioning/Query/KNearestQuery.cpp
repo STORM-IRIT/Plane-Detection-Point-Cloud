@@ -1,4 +1,4 @@
-#include <Query/KNearestQuery.h>
+#include <SpacePartitioning/Query/KNearestQuery.h>
 
 namespace pdpc {
 

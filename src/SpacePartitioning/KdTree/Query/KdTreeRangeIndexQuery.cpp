@@ -1,5 +1,5 @@
-#include <KdTree/Query/KdTreeRangeIndexQuery.h>
-#include <KdTree.h>
+#include <SpacePartitioning/KdTree/Query/KdTreeRangeIndexQuery.h>
+#include <SpacePartitioning/KdTree.h>
 
 namespace pdpc {
 

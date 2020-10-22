@@ -1,4 +1,4 @@
-#include <Query/PointQuery.h>
+#include <SpacePartitioning/Query/PointQuery.h>
 
 namespace pdpc {
 

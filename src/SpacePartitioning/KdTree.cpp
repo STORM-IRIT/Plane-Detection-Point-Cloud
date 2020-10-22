@@ -1,4 +1,4 @@
-#include <KdTree.h>
+#include <SpacePartitioning/KdTree.h>
 
 #include <numeric>
 

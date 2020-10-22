@@ -1,4 +1,4 @@
-#include <Query/RangeQuery.h>
+#include <SpacePartitioning/Query/RangeQuery.h>
 
 #include <cmath>
 

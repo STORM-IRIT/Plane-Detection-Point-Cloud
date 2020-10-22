@@ -1,7 +1,7 @@
 #pragma once
 
-#include <Query/IndexQuery.h>
-#include <Query/NearestQuery.h>
+#include <SpacePartitioning/Query/IndexQuery.h>
+#include <SpacePartitioning/Query/NearestQuery.h>
 
 namespace pdpc {
 

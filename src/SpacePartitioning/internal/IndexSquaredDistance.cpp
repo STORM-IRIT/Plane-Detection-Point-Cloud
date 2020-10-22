@@ -1,4 +1,4 @@
-#include <internal/IndexSquaredDistance.h>
+#include <SpacePartitioning/internal/IndexSquaredDistance.h>
 
 namespace pdpc {
 

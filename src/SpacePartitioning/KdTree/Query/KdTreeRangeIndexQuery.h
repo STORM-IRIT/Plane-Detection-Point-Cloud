@@ -1,8 +1,8 @@
 #pragma once
 
-#include <Query/RangeIndexQuery.h>
-#include <KdTree/Query/KdTreeQuery.h>
-#include <KdTree/Iterator/KdTreeRangeIndexIterator.h>
+#include <SpacePartitioning/Query/RangeIndexQuery.h>
+#include <SpacePartitioning/KdTree/Query/KdTreeQuery.h>
+#include <SpacePartitioning/KdTree/Iterator/KdTreeRangeIndexIterator.h>
 
 namespace pdpc {
 

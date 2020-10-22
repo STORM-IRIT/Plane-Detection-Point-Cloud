@@ -1,7 +1,7 @@
 #pragma once
 
-#include <Query/RangeIndexQuery.h>
-#include <KnnGraph/Iterator/KnnGraphRangeIterator.h>
+#include <SpacePartitioning/Query/RangeIndexQuery.h>
+#include <SpacePartitioning/KnnGraph/Iterator/KnnGraphRangeIterator.h>
 
 #include <vector>
 #include <stack>

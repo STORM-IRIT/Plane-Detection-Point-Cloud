@@ -1,4 +1,4 @@
-#include <Query/IndexQuery.h>
+#include <SpacePartitioning/Query/IndexQuery.h>
 
 namespace pdpc {
 

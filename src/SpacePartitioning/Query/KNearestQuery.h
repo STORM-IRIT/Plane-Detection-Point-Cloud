@@ -1,8 +1,8 @@
 #pragma once
 
-#include <limited_priority_queue.h>
+#include <SpacePartitioning/internal/IndexSquaredDistance.h>
 
-#include <internal/IndexSquaredDistance.h>
+#include <Common/limited_priority_queue.h>
 
 namespace pdpc {
 

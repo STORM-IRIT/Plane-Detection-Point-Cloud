@@ -1,7 +1,8 @@
-#include <Loader.h>
-#include <OBJ.h>
-#include <PLY.h>
-#include <Log.h>
+#include <PointCloud/Loader.h>
+#include <PointCloud/OBJ.h>
+#include <PointCloud/PLY.h>
+
+#include <Common/Log.h>
 
 namespace pdpc {
 

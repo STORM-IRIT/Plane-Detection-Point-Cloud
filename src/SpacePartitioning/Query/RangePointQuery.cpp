@@ -1,4 +1,4 @@
-#include <Query/RangePointQuery.h>
+#include <SpacePartitioning/Query/RangePointQuery.h>
 
 namespace pdpc {
 

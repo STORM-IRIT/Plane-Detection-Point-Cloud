@@ -1,6 +1,6 @@
-#include <Progress.h>
-#include <Log.h>
-#include <Timer.h>
+#include <Common/Progress.h>
+#include <Common/Log.h>
+#include <Common/Timer.h>
 
 #include <cmath>
 

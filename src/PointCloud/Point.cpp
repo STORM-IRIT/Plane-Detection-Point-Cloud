@@ -1,5 +1,5 @@
-#include <Point.h>
-#include <PointCloud.h>
+#include <PointCloud/Point.h>
+#include <PointCloud/PointCloud.h>
 
 namespace pdpc {
 

@@ -1,5 +1,5 @@
-#include <KdTree/Query/KdTreeNearestIndexQuery.h>
-#include <KdTree.h>
+#include <SpacePartitioning/KdTree/Query/KdTreeNearestIndexQuery.h>
+#include <SpacePartitioning/KdTree.h>
 
 namespace pdpc {
 

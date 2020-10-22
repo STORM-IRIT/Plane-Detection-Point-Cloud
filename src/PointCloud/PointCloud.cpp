@@ -1,8 +1,9 @@
-#include <PointCloud.h>
+#include <PointCloud/PointCloud.h>
 
-#include <KdTree.h>
-#include <KnnGraph.h>
-#include <std_vector_algo.h>
+#include <SpacePartitioning/KdTree.h>
+#include <SpacePartitioning/KnnGraph.h>
+
+#include <Common/std_vector_algo.h>
 
 namespace pdpc {
 

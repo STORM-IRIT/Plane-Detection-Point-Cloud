@@ -1,4 +1,4 @@
-#include <KdTree/Iterator/KdTreeNearestPointIterator.h>
+#include <SpacePartitioning/KdTree/Iterator/KdTreeNearestPointIterator.h>
 
 namespace pdpc {
 

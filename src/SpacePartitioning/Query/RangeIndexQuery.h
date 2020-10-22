@@ -1,7 +1,7 @@
 #pragma once
 
-#include <Query/RangeQuery.h>
-#include <Query/IndexQuery.h>
+#include <SpacePartitioning/Query/RangeQuery.h>
+#include <SpacePartitioning/Query/IndexQuery.h>
 
 namespace pdpc {
 

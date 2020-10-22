@@ -1,8 +1,8 @@
 #pragma once
 
-#include <Query/RangePointQuery.h>
-#include <KdTree/Query/KdTreeQuery.h>
-#include <KdTree/Iterator/KdTreeRangePointIterator.h>
+#include <SpacePartitioning/Query/RangePointQuery.h>
+#include <SpacePartitioning/KdTree/Query/KdTreeQuery.h>
+#include <SpacePartitioning/KdTree/Iterator/KdTreeRangePointIterator.h>
 
 namespace pdpc {
 

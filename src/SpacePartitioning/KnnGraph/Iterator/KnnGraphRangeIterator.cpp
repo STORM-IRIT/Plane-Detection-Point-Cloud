@@ -1,5 +1,5 @@
-#include <KnnGraph/Iterator/KnnGraphRangeIterator.h>
-#include <KnnGraph/Query/KnnGraphRangeQuery.h>
+#include <SpacePartitioning/KnnGraph/Iterator/KnnGraphRangeIterator.h>
+#include <SpacePartitioning/KnnGraph/Query/KnnGraphRangeQuery.h>
 
 namespace pdpc {
 

@@ -1,6 +1,7 @@
-#include <OBJ.h>
-#include <PointCloud.h>
-#include <Log.h>
+#include <PointCloud/OBJ.h>
+#include <PointCloud/PointCloud.h>
+
+#include <Common/Log.h>
 
 #include <fstream>
 

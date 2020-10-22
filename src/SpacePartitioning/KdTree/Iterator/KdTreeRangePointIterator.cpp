@@ -1,5 +1,5 @@
-#include <KdTree/Iterator/KdTreeRangePointIterator.h>
-#include <KdTree/Query/KdTreeRangePointQuery.h>
+#include <SpacePartitioning/KdTree/Iterator/KdTreeRangePointIterator.h>
+#include <SpacePartitioning/KdTree/Query/KdTreeRangePointQuery.h>
 
 namespace pdpc {
 

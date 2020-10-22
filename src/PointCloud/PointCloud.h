@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Point.h>
+#include <PointCloud/Point.h>
 #include <memory>
 
 namespace pdpc {

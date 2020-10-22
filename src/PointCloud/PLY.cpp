@@ -1,7 +1,8 @@
-#include <PLY.h>
-#include <PointCloud.h>
-#include <internal/plyio.h>
-#include <Log.h>
+#include <PointCloud/PLY.h>
+#include <PointCloud/PointCloud.h>
+#include <PointCloud/internal/plyio.h>
+
+#include <Common/Log.h>
 
 #include <fstream>
 

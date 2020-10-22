@@ -1,4 +1,4 @@
-#include <Query/NearestPointQuery.h>
+#include <SpacePartitioning/Query/NearestPointQuery.h>
 
 namespace pdpc {
 

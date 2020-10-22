@@ -1,7 +1,7 @@
-#include <KnnGraph.h>
-#include <KdTree.h>
+#include <SpacePartitioning/KnnGraph.h>
+#include <SpacePartitioning/KdTree.h>
 
-#include <Progress.h>
+#include <Common/Progress.h>
 
 namespace pdpc {
 

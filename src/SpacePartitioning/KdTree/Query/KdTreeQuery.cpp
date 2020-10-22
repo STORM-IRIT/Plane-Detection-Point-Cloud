@@ -1,4 +1,4 @@
-#include <KdTree/Query/KdTreeQuery.h>
+#include <SpacePartitioning/KdTree/Query/KdTreeQuery.h>
 
 namespace pdpc {
 

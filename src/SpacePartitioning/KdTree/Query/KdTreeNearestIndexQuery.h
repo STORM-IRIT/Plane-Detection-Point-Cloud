@@ -1,8 +1,8 @@
 #pragma once
 
-#include <Query/NearestIndexQuery.h>
-#include <KdTree/Query/KdTreeQuery.h>
-#include <KdTree/Iterator/KdTreeNearestIndexIterator.h>
+#include <SpacePartitioning/Query/NearestIndexQuery.h>
+#include <SpacePartitioning/KdTree/Query/KdTreeQuery.h>
+#include <SpacePartitioning/KdTree/Iterator/KdTreeNearestIndexIterator.h>
 
 namespace pdpc {
 

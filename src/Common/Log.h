@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-#include <Timer.h>
+#include <Common/Timer.h>
 
 #include <iostream>
 #include <string>
@@ -55,4 +55,4 @@ protected:
 
 } // namespace pdpc
 
-#include <Log.inl>
+#include <Common/Log.inl>

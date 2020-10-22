@@ -1,13 +1,13 @@
 #pragma once
 
-#include <KdTree/KdTreeNode.h>
+#include <SpacePartitioning/KdTree/KdTreeNode.h>
 
-#include <KdTree/Query/KdTreeKNearestIndexQuery.h>
-#include <KdTree/Query/KdTreeKNearestPointQuery.h>
-#include <KdTree/Query/KdTreeNearestIndexQuery.h>
-#include <KdTree/Query/KdTreeNearestPointQuery.h>
-#include <KdTree/Query/KdTreeRangeIndexQuery.h>
-#include <KdTree/Query/KdTreeRangePointQuery.h>
+#include <SpacePartitioning/KdTree/Query/KdTreeKNearestIndexQuery.h>
+#include <SpacePartitioning/KdTree/Query/KdTreeKNearestPointQuery.h>
+#include <SpacePartitioning/KdTree/Query/KdTreeNearestIndexQuery.h>
+#include <SpacePartitioning/KdTree/Query/KdTreeNearestPointQuery.h>
+#include <SpacePartitioning/KdTree/Query/KdTreeRangeIndexQuery.h>
+#include <SpacePartitioning/KdTree/Query/KdTreeRangePointQuery.h>
 
 #include <memory>
 

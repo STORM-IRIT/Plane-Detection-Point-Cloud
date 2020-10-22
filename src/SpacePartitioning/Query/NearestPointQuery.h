@@ -1,7 +1,7 @@
 #pragma once
 
-#include <Query/PointQuery.h>
-#include <Query/NearestQuery.h>
+#include <SpacePartitioning/Query/PointQuery.h>
+#include <SpacePartitioning/Query/NearestQuery.h>
 
 namespace pdpc {
 
