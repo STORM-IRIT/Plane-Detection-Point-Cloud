@@ -3,7 +3,8 @@ project(Plane-Detection-Point-Cloud)
 
 file(GLOB_RECURSE headers src/*.h)
 file(GLOB_RECURSE sources src/*.cpp)
-set(source_files ${headers} ${sources})
+file(GLOB_RECURSE inlines src/*.inl)
+set(source_files ${headers} ${sources} ${inlines})
 
 include_directories(external/Eigen/ src/)
 
