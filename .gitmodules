@@ -1,6 +1,3 @@
 [submodule "external/Eigen"]
 	path = external/Eigen
 	url = https://github.com/eigenteam/eigen-git-mirror.git
-[submodule "external/Ponca"]
-	path = external/Ponca
-	url = https://github.com/ThibaultLejemble/ponca.git
