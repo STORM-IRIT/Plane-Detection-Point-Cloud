@@ -17,6 +17,8 @@ using Vector3Array = std::vector<Vector3>;
 using Vector4Array = std::vector<Vector4>;
 using Vector3iArray = std::vector<Vector3i>;
 using Matrix3 = Eigen::Matrix<Scalar,3,3>;
-using Aabb = Eigen::AlignedBox<Scalar,3>;
+using Aabb  = Eigen::AlignedBox<Scalar,3>;
+using Aabb3 = Eigen::AlignedBox<Scalar,3>;
+using Aabb2 = Eigen::AlignedBox<Scalar,2>;
 
 } // namespace pdpc
