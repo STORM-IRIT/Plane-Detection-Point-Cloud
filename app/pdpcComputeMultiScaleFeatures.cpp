@@ -1,19 +1,18 @@
 #include <PDPC/Common/Option.h>
 #include <PDPC/Common/Log.h>
-
 #include <PDPC/PointCloud/Loader.h>
 #include <PDPC/PointCloud/PointCloud.h>
-
 #include <PDPC/SpacePartitioning/KdTree.h>
-
 #include <PDPC/ScaleSpace/ScaleSampling.h>
+#include <PDPC/MultiScaleFeatures/MultiScaleFeatures.h>
 
 using namespace pdpc;
 
 int main(int argc, char **argv)
 {
     Option opt(argc, argv);
-    const std::string in_input  = opt.get_string("input",       "i"     ).set_required()    .set_brief("Input point cloud (ply/obj)");
+    const std::string in_input  = opt.get_string("input",       "i"     ).set_required()    .set_brief("Input point cloud (.ply or .obj)");
+    const std::string in_output = opt.get_string("output",      "o"     ).set_default("features.bin").set_brief("Output features (.bin or .txt)");
     const Scalar      in_scount = opt.get_float( "scale_count", "scount").set_default(50)   .set_brief("Scale count");
     const Scalar      in_smin   = opt.get_float( "scale_min",   "smin"  ).set_default(1)    .set_brief("Factor of the local point spacing");
     const Scalar      in_smax   = opt.get_float( "scale_max",   "smax"  ).set_default(1)    .set_brief("Factor of the aabb diag length");
@@ -65,7 +64,11 @@ int main(int argc, char **argv)
     // 2. Features -------------------------------------------------------------
     info().iff(in_v) << "Computing features";
 
+    MultiScaleFeatures features(point_count, scale_count);
 
+    PDPC_TODO;
+
+    features.save(in_output);
 
     return 0;
 }
