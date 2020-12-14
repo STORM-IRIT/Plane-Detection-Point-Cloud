@@ -52,70 +52,77 @@ int main(int argc, char **argv)
 
     // 1. Segmentations --------------------------------------------------------
     info().iff(in_v) << "Performing " << scale_count << " planar region growing";
-
     MSSegmentation ms_seg(scale_count, Segmentation(point_count));
-    const Scalar threshold_angle = std::cos(in_theta / 180. * M_PI);
-    const Scalar threshold_curva = in_phi;
 
-    points.build_knn_graph(in_k);
-
-    #pragma omp parallel for
-    for(int j=0; j<scale_count; ++j)
     {
-        #pragma omp critical (seg_info)
+        const Scalar threshold_angle = std::cos(in_theta / 180. * M_PI);
+        const Scalar threshold_curva = in_phi;
+
+        points.build_knn_graph(in_k);
+
+        #pragma omp parallel for
+        for(int j=0; j<scale_count; ++j)
         {
-            info().iff(in_v) << "Processing scale " << j << "/" << scale_count-1 << " (" << int(Scalar(j)/(scale_count-1)*100) << "%)...";
-        }
-
-        std::vector<int> seeds;
-        Segmentation& seg = ms_seg[j];
-
-        SeededKNNGraphRegionGrowing::compute(points, seg,
-        // Comparison function for growing
-        [&features,&seeds,j,threshold_angle,threshold_curva](int rg_l, int rg_i, int rg_j) -> bool
-        {
-            const int idx_seed = seeds[rg_l];
-            PDPC_UNUSED(rg_i);
-            return features.normal(idx_seed,j).dot(features.normal(rg_j,j)) > threshold_angle &&
-                   features.plane_dev(rg_j,j) < threshold_curva;
-        },
-        // Priority function for seeds
-        [&features,j](int rg_i, int rg_j) -> bool
-        {
-            return features.plane_dev(rg_i, j) > features.plane_dev(rg_j, j);
-        },
-        // Called for region initialization
-        [&seeds](int rg_l, int rg_i)
-        {
-            PDPC_UNUSED(rg_l);
-            seeds.push_back(rg_i);
-        });
-
-        PDPC_ASSERT(seg.region_count() == int(seeds.size()));
-
-        // filtering
-        std::vector<bool> to_invalidate(seg.region_count(), false);
-        std::vector<std::vector<int>> regions;
-        seg.fill(regions);
-
-        for(int l=0; l<seg.region_count(); ++l)
-        {
-            const Vector3 plane_p = points.point(seeds[l]);
-            const Vector3 plane_n = points.normal(seeds[l]);
-            const Matrix3 plane_T = orthonormal_basis(plane_n);
-
-            Aabb2 aabb;
-            for(int i : regions[l])
+            #pragma omp critical (seg_info)
             {
-                aabb.extend( (plane_T * (points[i]-plane_p)).head<2>() );
+                info().iff(in_v) << "Processing scale " << j << "/" << scale_count-1 << " (" << int(Scalar(j)/(scale_count-1)*100) << "%)...";
             }
-            to_invalidate[l] = aabb.diagonal().norm() < scales[j];
+
+            // 1.1 Region growing ----------------------------------------------
+            std::vector<int> seeds;
+            Segmentation& seg = ms_seg[j];
+
+            SeededKNNGraphRegionGrowing::compute(points, seg,
+            // Comparison function for growing
+            [&features,&seeds,j,threshold_angle,threshold_curva](int rg_l, int rg_i, int rg_j) -> bool
+            {
+                const int idx_seed = seeds[rg_l];
+                PDPC_UNUSED(rg_i);
+                return features.normal(idx_seed,j).dot(features.normal(rg_j,j)) > threshold_angle &&
+                       features.plane_dev(rg_j,j) < threshold_curva;
+            },
+            // Priority function for seeds
+            [&features,j](int rg_i, int rg_j) -> bool
+            {
+                return features.plane_dev(rg_i, j) > features.plane_dev(rg_j, j);
+            },
+            // Called for region initialization
+            [&seeds](int rg_l, int rg_i)
+            {
+                PDPC_UNUSED(rg_l);
+                seeds.push_back(rg_i);
+            });
+
+            PDPC_ASSERT(seg.region_count() == int(seeds.size()));
+
+            // 1.2 Filtering ---------------------------------------------------
+            std::vector<bool> to_invalidate(seg.region_count(), false);
+            std::vector<std::vector<int>> regions;
+            seg.fill(regions);
+
+            for(int l=0; l<seg.region_count(); ++l)
+            {
+                const Vector3 plane_p = points.point(seeds[l]);
+                const Vector3 plane_n = points.normal(seeds[l]);
+                const Matrix3 plane_T = orthonormal_basis(plane_n);
+
+                Aabb2 aabb;
+                for(int i : regions[l])
+                {
+                    aabb.extend( (plane_T * (points[i]-plane_p)).head<2>() );
+                }
+                to_invalidate[l] = aabb.diagonal().norm() < scales[j];
+            }
+            seg.invalidate(to_invalidate);
+            seg.make_full();
         }
-        seg.invalidate(to_invalidate);
-        seg.make_full();
     }
 
-
+    // 2. Graph ----------------------------------------------------------------
+    info().iff(in_v) << "Building graph";
+    {
+        PDPC_TODO;
+    }
 
     return 0;
 }
