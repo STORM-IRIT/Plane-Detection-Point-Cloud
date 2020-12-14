@@ -15,7 +15,6 @@ int main(int argc, char **argv)
 {
     Option opt(argc, argv);
     const std::string in_input   = opt.get_string("input",  "i").set_brief("Input point cloud (.ply/.obj)").set_required();
-    const std::string in_output  = opt.get_string("output", "o").set_brief("Output features (.bin/.txt)").set_default("features.bin");
 
     const Scalar in_scount = opt.get_float("scale_count", "scount").set_default(50).set_brief("Scale count");
     const Scalar in_smin   = opt.get_float("scale_min",   "smin"  ).set_default(1) .set_brief("Factor of the local point spacing");
@@ -87,7 +86,6 @@ int main(int argc, char **argv)
     // start with the full indices
     std::iota(sampling.begin(), sampling.end(), 0);
 
-
     // for each scale
     for(int j=0; j<scale_count; ++j)
     {
@@ -153,7 +151,9 @@ int main(int argc, char **argv)
         }
     } // for j
 
-    features.save(in_output);
+    features.save("features.bin");
+    scales.save("scales.txt");
+
 
     return 0;
 }
