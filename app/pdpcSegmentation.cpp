@@ -228,6 +228,8 @@ int main(int argc, char **argv)
         });
         comp_set.data().erase(it, comp_set.data().end());
         comp_set.properties().resize(comp_set.data().size());
+
+        info().iff(in_v) << comp_set.size() << " components extracted";
     }
 
     // 4. Final regions --------------------------------------------------------
@@ -276,9 +278,6 @@ int main(int argc, char **argv)
             }
         }
     }
-
-
-
 
     return 0;
 }
