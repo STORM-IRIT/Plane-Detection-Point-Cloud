@@ -49,4 +49,9 @@ int MultiScaleFeatures::index(int i, int j) const
     return j * m_point_count + i;
 }
 
+Scalar MultiScaleFeatures::plane_dev(int i, int j) const
+{
+    return std::sqrt( k1(i,j)*k1(i,j) + k2(i,j)*k2(i,j) );
+}
+
 } // namespace pdpc

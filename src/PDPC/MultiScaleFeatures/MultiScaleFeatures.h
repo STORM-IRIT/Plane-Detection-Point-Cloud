@@ -31,6 +31,8 @@ public:
     inline const Scalar& k2(int i, int j) const;
     inline       Scalar& k2(int i, int j);
 
+    inline Scalar plane_dev(int i, int j) const;
+
 public:
     inline int index(int i, int j) const;
 
