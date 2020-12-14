@@ -13,3 +13,5 @@ Persistence Analysis of Multi-scale Planar Structure Graph in Point Clouds
     - replace 'simple' proj by 'quasi-orthogonal' proj
     - use cuda for computing multi-scale features
     - polygonal reconstruction
+    - provides timings
+    - handle txt/xyz files
