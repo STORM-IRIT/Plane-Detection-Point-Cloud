@@ -25,6 +25,11 @@ bool MultiScaleFeatures::save(const std::string& filename, bool v) const
     {
         const std::string filename_bin = (ext == ".bin") ? (filename) : (filename + ".bin");
         std::ofstream ofs(filename_bin);
+        if(!ofs.is_open())
+        {
+            error().iff(v) << "Failed to open output features file " << filename_bin;
+            return false;
+        }
 
         ofs.write(reinterpret_cast<const char*>(&m_point_count), sizeof(int));
         ofs.write(reinterpret_cast<const char*>(&m_scale_count), sizeof(int));
@@ -51,6 +56,11 @@ bool MultiScaleFeatures::load(const std::string& filename, bool v)
     else if(ext == "bin")
     {
         std::ifstream ifs(filename);
+        if(!ifs.is_open())
+        {
+            error().iff(v) << "Failed to open input features file " << filename;
+            return false;
+        }
 
         ifs.read(reinterpret_cast<char*>(&m_point_count), sizeof(int));
         ifs.read(reinterpret_cast<char*>(&m_scale_count), sizeof(int));
