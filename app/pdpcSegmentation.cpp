@@ -21,8 +21,8 @@ int main(int argc, char **argv)
 {
     Option opt(argc, argv);
     const std::string in_input    = opt.get_string("input",    "i").set_brief("Input point cloud (.ply/.obj)").set_required();
-    const std::string in_scales   = opt.get_string("scales",   "s").set_brief("Input scales (.txt)").set_required();
-    const std::string in_features = opt.get_string("features", "f").set_brief("Input features (.txt/.bin)").set_required();
+    const std::string in_scales   = opt.get_string("scales",   "s").set_brief("Input scales (.txt)"          ).set_default("scales.txt");
+    const std::string in_features = opt.get_string("features", "f").set_brief("Input features (.txt/.bin)"   ).set_default("features.bin");
 
     const int    in_k     = opt.get_int(  "knn",  "k").set_default(10).set_brief("Region growing nearest neighbors count");
     const Scalar in_theta = opt.get_float("theta"    ).set_default(5.).set_brief("Region growing angular threshold (degrees)");
@@ -259,7 +259,6 @@ int main(int argc, char **argv)
             seg.resize_region(comp_set.size());
         });
 
-        auto prog = Progress(comp_set.size());
         #pragma omp parallel for
         for(int idx_comp=0; idx_comp<comp_set.size(); ++idx_comp)
         {
@@ -275,7 +274,6 @@ int main(int argc, char **argv)
                     comp_seg[level].set_label(idx_point, idx_comp);
                 }
             }
-            ++prog;
         }
     }
 
