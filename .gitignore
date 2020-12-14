@@ -35,3 +35,5 @@
 CMakeLists.txt.user
 buildDebug/
 buildRelease/
+work/
+test/
