@@ -44,6 +44,8 @@ int main(int argc, char **argv)
         return 1;
     }
 
+    points.build_kdtree();
+
     // 1. Scales ---------------------------------------------------------------
     info().iff(in_v) << "Computing " << in_scount << " scales";
 
