@@ -1,6 +1,8 @@
 #include <PDPC/ScaleSpace/ScaleSampling.h>
+#include <PDPC/Common/Log.h>
 
 #include <cmath>
+#include <fstream>
 
 namespace pdpc {
 
@@ -49,6 +51,45 @@ std::istream& ScaleSampling::read(std::istream& is)
     is.read(reinterpret_cast<char*>(m_scales.data()), size*sizeof(Scalar));
     assert(this->is_valid());
     return is;
+}
+
+bool ScaleSampling::save(const std::string& filename, bool v) const
+{
+    std::ofstream ofs(filename);
+    if(!ofs.is_open())
+    {
+        error().iff(v) << "Failed to open output scales file " << filename;
+        return false;
+    }
+
+    for(const Scalar s : m_scales)
+    {
+        ofs << s << " ";
+    }
+
+    info().iff(v) << m_scales.size() << " scales saved to " << filename;
+
+    return true;
+}
+
+bool ScaleSampling::load(const std::string& filename, bool v)
+{
+    this->clear();
+
+    std::ifstream ifs(filename);
+    if(!ifs.is_open())
+    {
+        error().iff(v) << "Failed to open input scales file " << filename;
+        return false;
+    }
+
+    Scalar s;
+    while(ifs >> s)
+        m_scales.push_back(s);
+
+    info().iff(v) << m_scales.size() << " scales loaded from " << filename;
+
+    return true;
 }
 
 // Sampling --------------------------------------------------------------------

@@ -29,6 +29,9 @@ public:
     std::ostream& write(std::ostream& os) const;
     std::istream& read(std::istream& is);
 
+    bool save(const std::string& filename, bool verbose = true) const;
+    bool load(const std::string& filename, bool verbose = true);
+
     // Modifiers ---------------------------------------------------------------
 public:
     inline void clear();
