@@ -4,6 +4,7 @@
 #include <PDPC/PointCloud/PointCloud.h>
 #include <PDPC/MultiScaleFeatures/MultiScaleFeatures.h>
 #include <PDPC/Segmentation/SeededKNNGraphRegionGrowing.h>
+#include <PDPC/Segmentation/MSSegmentation.h>
 
 using namespace pdpc;
 
@@ -41,14 +42,16 @@ int main(int argc, char **argv)
     // 1. Segmentations --------------------------------------------------------
     info().iff(in_v) << "Performing " << scale_count << " planar region growing";
 
+    MSSegmentation ms_seg(scale_count, Segmentation(point_count));
+
     points.build_knn_graph(in_k);
 
     for(int j=0; j<scale_count; ++j)
     {
-        SeededKNNGraphRegionGrowing::compute(points, seg,
-        [](){},
-        [](){},
-        [](){});
+        SeededKNNGraphRegionGrowing::compute(points, ms_seg[j],
+        [](int l, int i, int j)->bool{},
+        [](int i, int j)->bool{},
+        [](int l, int i){});
     }
 
     return 0;

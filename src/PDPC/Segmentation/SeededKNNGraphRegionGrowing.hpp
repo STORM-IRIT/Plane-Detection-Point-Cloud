@@ -1,4 +1,4 @@
-#include <PointCloud/Segmentation/SeededKNNGraphRegionGrowing.h>
+#include <PDPC/Segmentation/SeededKNNGraphRegionGrowing.h>
 
 namespace pdpc {
 
