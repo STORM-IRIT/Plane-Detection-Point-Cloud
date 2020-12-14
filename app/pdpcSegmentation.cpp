@@ -48,8 +48,11 @@ int main(int argc, char **argv)
 
     points.build_knn_graph(in_k);
 
+    #pragma omp parallel for
     for(int j=0; j<scale_count; ++j)
     {
+        info().iff(in_v) << "Processing scale " << j << "/" << scale_count-1 << " (" << int(Scalar(j)/(scale_count-1)*100) << "%)...";
+
         std::vector<int> seeds;
 
         SeededKNNGraphRegionGrowing::compute(points, ms_seg[j],
@@ -73,6 +76,11 @@ int main(int argc, char **argv)
             seeds.push_back(rg_i);
         });
     }
+
+    // 2. Filtering ------------------------------------------------------------
+
+    PDPC_TODO;
+
 
     return 0;
 }
