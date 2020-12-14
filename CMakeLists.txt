@@ -24,7 +24,7 @@ file(GLOB_RECURSE lib_inlines src/*.inl)
 set(lib_files ${lib_headers} ${lib_sources} ${lib_inlines})
 
 add_library(pdpclib STATIC ${lib_files})
-target_include_directories(pdpclib PUBLIC external/Eigen/ external/Ponca/src src/)
+target_include_directories(pdpclib PUBLIC src)
 
 file(GLOB_RECURSE app_sources app/*.cpp)
 foreach(file ${app_sources})

@@ -23,12 +23,9 @@ public:
     using WeightFunc    = RIMLSWeightFunc<Point, WeightKernel>;
     using FitStep       = Ponca::Basket<Point, WeightFunc, Ponca::OrientedSphereFit>;
     using FitFinal      = Ponca::Basket<Point, WeightFunc, Ponca::OrientedSphereFit,
-                                                               Ponca::OrientedSphereScaleSpaceDer,
-                                                               Ponca::MlsSphereFitDer,
-                                                               Ponca::CurvatureEstimator,
-                                                               Ponca::GLSParam,
-                                                               Ponca::GLSDer,
-                                                               Ponca::GLSGeomVar>;
+                                                           Ponca::OrientedSphereScaleSpaceDer,
+                                                           Ponca::MlsSphereFitDer,
+                                                           Ponca::CurvatureEstimator>;
 
     // MLSOperator -------------------------------------------------------------
 public:

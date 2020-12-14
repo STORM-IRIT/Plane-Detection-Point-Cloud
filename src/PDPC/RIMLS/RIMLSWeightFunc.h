@@ -1,6 +1,6 @@
 #pragma once
 
-#include <../external/Ponca/src/ponca.h>
+#include <Ponca/core.h>
 
 namespace pdpc {
 
