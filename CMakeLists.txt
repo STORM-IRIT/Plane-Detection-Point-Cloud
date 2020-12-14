@@ -1,6 +1,23 @@
 cmake_minimum_required(VERSION 2.8.11)
 project(Plane-Detection-Point-Cloud)
 
+option(PDPC_USE_OMP "Use OpenMP" ON)
+
+set(CMAKE_CXX_FLAGS                "-Wall -Wextra")
+set(CMAKE_CXX_FLAGS_DEBUG          "-DPDPC_DEBUG -g3 -ggdb")
+set(CMAKE_CXX_FLAGS_RELEASE        "-DNDEBUG -O3")
+set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-DNDEBUG -O2 -g3")
+
+if(PDPC_USE_OMP)
+    find_package(OpenMP)
+    if(OPENMP_FOUND)
+        set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
+    else()
+        message(WARNING "OpenMP ON but not found!")
+    endif()
+endif()
+
 file(GLOB_RECURSE lib_headers src/*.hpp src/*.h)
 file(GLOB_RECURSE lib_sources src/*.cpp)
 file(GLOB_RECURSE lib_inlines src/*.inl)
@@ -9,9 +26,7 @@ set(lib_files ${lib_headers} ${lib_sources} ${lib_inlines})
 add_library(pdpclib STATIC ${lib_files})
 target_include_directories(pdpclib PUBLIC external/Eigen/ external/Ponca/src src/)
 
-
 file(GLOB_RECURSE app_sources app/*.cpp)
-
 foreach(file ${app_sources})
     get_filename_component(name ${file} NAME_WE)
     message(STATUS "Build app ${name}")
