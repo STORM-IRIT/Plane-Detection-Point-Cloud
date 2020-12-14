@@ -1,5 +1,7 @@
 ﻿#pragma once
 
+#include <PDPC/Segmentation/SegmentationIterators.h>
+
 #include <vector>
 #include <iostream>
 #include <cassert>
@@ -55,6 +57,17 @@ public:
 public:
     std::ostream& write(std::ostream& os) const;
     std::istream& read(std::istream& is);
+
+    // Iterators ---------------------------------------------------------------
+public:
+    RegionIterator begin() const; // start at the invalid region
+    RegionIterator end() const;
+
+    IndexIterator begin(int l) const;
+    IndexIterator end(int l) const;
+
+    IndexIteratorView indices(int l) const;
+    IndexIteratorView indices(const RegionView& region) const;
 
     // Capacity ----------------------------------------------------------------
 public:

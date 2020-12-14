@@ -104,6 +104,38 @@ std::istream& Segmentation::read(std::istream& is)
     return is;
 }
 
+// Iterators -------------------------------------------------------------------
+
+RegionIterator Segmentation::begin() const
+{
+    return RegionIterator(*this, this->label_inf());
+}
+
+RegionIterator Segmentation::end() const
+{
+    return RegionIterator(*this, this->label_sup() + 1); // +1 to be 'just after' the last region
+}
+
+IndexIterator Segmentation::begin(int l) const
+{
+    return IndexIterator(*this, l, true);
+}
+
+IndexIterator Segmentation::end(int l) const
+{
+    return IndexIterator(*this, l, false);
+}
+
+IndexIteratorView Segmentation::indices(int l) const
+{
+    return IndexIteratorView(*this, l);
+}
+
+IndexIteratorView Segmentation::indices(const RegionView& region) const
+{
+    return indices(region.label());
+}
+
 // Capacity --------------------------------------------------------------------
 
 int Segmentation::non_empty_region_count() const
