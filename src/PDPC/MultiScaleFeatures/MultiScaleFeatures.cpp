@@ -23,7 +23,7 @@ bool MultiScaleFeatures::save(const std::string& filename, bool v) const
     }
     else
     {
-        const std::string filename_bin = (ext == ".bin") ? (filename) : (filename + ".bin");
+        const std::string filename_bin = (ext == "bin") ? (filename) : (filename + ".bin");
         std::ofstream ofs(filename_bin);
         if(!ofs.is_open())
         {
