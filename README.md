@@ -17,7 +17,7 @@ Abstract Modern acquisition techniques generate detailed point clouds that sampl
 
 ## Getting Started
 
-### Compilation on Linux
+### Compilation
 
 ```
 git clone git@github.com:ThibaultLejemble/Plane-Detection-Point-Cloud.git
@@ -25,13 +25,18 @@ cd Plane-Detection-Point-Cloud
 mkdir build
 cd build
 cmake -DCMAKE_BUILD_TYPE=Release ..
-make -j
+make -j 
+make install
 ```
 
 Tested using
 - Debian GNU/Linux 10 (buster)
 - cmake 3.13.4
 - g++ 8.3.0
+
+### Usage
+
+TODO
 
 ## TODO
 - Important
