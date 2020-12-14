@@ -11,8 +11,8 @@ public:
     MultiScaleFeatures(int point_count = 0, int scale_count = 0);
 
 public:
-    bool save(const std::string& filename) const;
-    bool load(const std::string& filename);
+    bool save(const std::string& filename, bool verbose = true) const;
+    bool load(const std::string& filename, bool verbose = true);
 
 public:
     void clear();

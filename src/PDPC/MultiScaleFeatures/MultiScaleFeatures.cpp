@@ -1,4 +1,7 @@
 #include <PDPC/MultiScaleFeatures/MultiScaleFeatures.h>
+#include <PDPC/Common/Log.h>
+
+#include <fstream>
 
 namespace pdpc {
 
@@ -10,16 +13,62 @@ MultiScaleFeatures::MultiScaleFeatures(int point_count, int scale_count) :
 {
 }
 
-bool MultiScaleFeatures::save(const std::string& filename) const
+bool MultiScaleFeatures::save(const std::string& filename, bool v) const
 {
-    PDPC_TODO;
-    return false;
+    const std::string ext = filename.substr(filename.find_last_of(".") + 1);
+    if(ext == "txt")
+    {
+        PDPC_TODO; // txt not yet implemented
+        return false;
+    }
+    else
+    {
+        const std::string filename_bin = (ext == ".bin") ? (filename) : (filename + ".bin");
+        std::ofstream ofs(filename_bin);
+
+        ofs.write(reinterpret_cast<const char*>(&m_point_count), sizeof(int));
+        ofs.write(reinterpret_cast<const char*>(&m_scale_count), sizeof(int));
+        ofs.write(reinterpret_cast<const char*>(m_normals.data()),    3 * sizeof(Scalar) * m_normals.size());
+        ofs.write(reinterpret_cast<const char*>(m_curvatures.data()), 2 * sizeof(Scalar) * m_curvatures.size());
+
+        info().iff(v) << m_point_count << "x" << m_scale_count
+                      << " features saved to " << filename_bin;
+    }
+
+    return true;
 }
 
-bool MultiScaleFeatures::load(const std::string& filename)
+bool MultiScaleFeatures::load(const std::string& filename, bool v)
 {
-    PDPC_TODO;
-    return false;
+    this->clear();
+
+    const std::string ext = filename.substr(filename.find_last_of(".") + 1);
+    if(ext == "txt")
+    {
+        PDPC_TODO; // txt not yet implemented
+        return false;
+    }
+    else if(ext == "bin")
+    {
+        std::ifstream ifs(filename);
+
+        ifs.read(reinterpret_cast<char*>(&m_point_count), sizeof(int));
+        ifs.read(reinterpret_cast<char*>(&m_scale_count), sizeof(int));
+
+        this->resize(m_point_count, m_scale_count);
+
+        ifs.read(reinterpret_cast<char*>(m_normals.data()),    3 * sizeof(Scalar) * m_normals.size());
+        ifs.read(reinterpret_cast<char*>(m_curvatures.data()), 2 * sizeof(Scalar) * m_curvatures.size());
+
+        info().iff(v) << m_point_count << "x" << m_scale_count
+                      << " features loaded from " << filename;
+    }
+    else
+    {
+        error().iff(v) << "Unkown extension " << ext << " for features file";
+        return false;
+    }
+    return true;
 }
 
 void MultiScaleFeatures::clear()
