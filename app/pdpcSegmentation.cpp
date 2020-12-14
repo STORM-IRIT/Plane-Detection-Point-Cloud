@@ -109,10 +109,13 @@ int main(int argc, char **argv)
             {
                 aabb.extend( (plane_T * (points[i]-plane_p)).head<2>() );
             }
-            to_invalidate[l] = aabb.diagonal().norm() < scale;
+            to_invalidate[l] = aabb.diagonal().norm() < scales[j];
         }
-
+        seg.invalidate(to_invalidate);
+        seg.make_full();
     }
+
+
 
     return 0;
 }
