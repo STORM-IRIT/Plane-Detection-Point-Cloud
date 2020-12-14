@@ -5,6 +5,7 @@
 #include <PDPC/SpacePartitioning/KdTree.h>
 #include <PDPC/ScaleSpace/ScaleSampling.h>
 #include <PDPC/MultiScaleFeatures/MultiScaleFeatures.h>
+#include <PDPC/RIMLS/RIMLSOperator.h>
 
 #include <numeric>
 
@@ -13,17 +14,22 @@ using namespace pdpc;
 int main(int argc, char **argv)
 {
     Option opt(argc, argv);
-    const std::string in_input  = opt.get_string("input",       "i"     ).set_required()    .set_brief("Input point cloud (.ply or .obj)");
-    const std::string in_output = opt.get_string("output",      "o"     ).set_default("features.bin").set_brief("Output features (.bin or .txt)");
-    const Scalar      in_scount = opt.get_float( "scale_count", "scount").set_default(50)   .set_brief("Scale count");
-    const Scalar      in_smin   = opt.get_float( "scale_min",   "smin"  ).set_default(1)    .set_brief("Factor of the local point spacing");
-    const Scalar      in_smax   = opt.get_float( "scale_max",   "smax"  ).set_default(1)    .set_brief("Factor of the aabb diag length");
-    const int         in_k      = opt.get_int(   "knn",         "k"     ).set_default(10)   .set_brief("Nearest neighbors count for the minimal scale");
-    const Scalar      in_alpha  = opt.get_float( "alpha",       "a"     ).set_default(0.1)  .set_brief("Sub-sampling factor for the multi-resolution");
-    const bool        in_v      = opt.get_bool(  "verbose",     "v"     ).set_default(false).set_brief("Add verbose messages");
+    const std::string in_input   = opt.get_string("input",  "i").set_required()             .set_brief("Input point cloud (.ply or .obj)");
+    const std::string in_output  = opt.get_string("output", "o").set_default("features.bin").set_brief("Output features (.bin or .txt)");
 
-    constexpr bool in_full    = false;
-    constexpr bool in_uniform = true;
+    const Scalar in_scount = opt.get_float("scale_count", "scount").set_default(50).set_brief("Scale count");
+    const Scalar in_smin   = opt.get_float("scale_min",   "smin"  ).set_default(1) .set_brief("Factor of the local point spacing");
+    const Scalar in_smax   = opt.get_float("scale_max",   "smax"  ).set_default(1) .set_brief("Factor of the aabb diag length");
+    const int    in_k      = opt.get_int(  "knn",         "k"     ).set_default(10).set_brief("Nearest neighbors count for the minimal scale");
+
+    const Scalar in_alpha = opt.get_float("alpha", "a").set_default(0.1).set_brief("Sub-sampling factor for the multi-resolution");
+
+    const Scalar in_mls_eps    = opt.get_float( "mls_eps"   ).set_default(0.01).set_brief("MLS convergence threshold (factor of the scale)");
+    const int    in_mls_max    = opt.get_int(   "mls_max"   ).set_default(20)  .set_brief("MLS step max");
+    const Scalar in_irls_sigma = opt.get_float( "irls_sigma").set_default(0.5) .set_brief("IRLS factor");
+    const int    in_irls_step  = opt.get_int(   "irls_step" ).set_default(5)   .set_brief("IRLS step");
+
+    const bool in_v = opt.get_bool(  "verbose",     "v"     ).set_default(false).set_brief("Add verbose messages");
 
     bool ok = opt.ok();
     if(!ok) return 1;
@@ -87,12 +93,9 @@ int main(int argc, char **argv)
     {
         info().iff(j) << "Processing scale " << j << "/" << scale_count-1 << " (" << int(Scalar(j)/(scale_count-1)*100) << "%)...";
 
+        const Scalar scale  = scales[j];
+
         // 2.1 poisson disk sampling -------------------------------------------
-        if(j == 0 && !in_full)
-        {
-            // kdtree already built = no sub-sampling
-        }
-        else
         {
             rank.resize(sampling.size());
             std::iota(rank.begin(), rank.end(), 0);
@@ -101,7 +104,6 @@ int main(int argc, char **argv)
 
             sampling2.clear();
 
-            const Scalar scale  = scales[j];
             const Scalar radius = in_alpha * scale;
 
             for(int idx_sample : rank)
@@ -121,12 +123,26 @@ int main(int argc, char **argv)
         }
 
         // 2.2 Features --------------------------------------------------------
-        #pragma omp parallel for
-        for(int i=0; i<point_count; ++i)
         {
-            PDPC_TODO;
+            RIMLSOperator mls;
+            mls.set_scale(scale);
+            mls.set_step_max(in_mls_max);
+            mls.set_convergence_ratio_min(in_mls_eps);
+            mls.set_reweighting_step(in_irls_step);
+            mls.set_reweighting_sigma(in_irls_sigma);
 
-        } // for i
+            #pragma omp parallel for firstprivate(mls)
+            for(int i=0; i<point_count; ++i)
+            {
+                Vector3 p = points[i];
+                mls.compute(points, p);
+
+                features.normal(i,j) = mls.fit().normal();
+                features.k1(i,j) = mls.fit().k1() * scale; // normalized curvature
+                features.k2(i,j) = mls.fit().k2() * scale;
+
+            } // for i
+        }
     } // for j
 
     features.save(in_output);
