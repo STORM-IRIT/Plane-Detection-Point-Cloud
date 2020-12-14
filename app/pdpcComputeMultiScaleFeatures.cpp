@@ -14,8 +14,8 @@ using namespace pdpc;
 int main(int argc, char **argv)
 {
     Option opt(argc, argv);
-    const std::string in_input   = opt.get_string("input",  "i").set_required()             .set_brief("Input point cloud (.ply or .obj)");
-    const std::string in_output  = opt.get_string("output", "o").set_default("features.bin").set_brief("Output features (.bin or .txt)");
+    const std::string in_input   = opt.get_string("input",  "i").set_brief("Input point cloud (.ply/.obj)").set_required();
+    const std::string in_output  = opt.get_string("output", "o").set_brief("Output features (.bin/.txt)").set_default("features.bin");
 
     const Scalar in_scount = opt.get_float("scale_count", "scount").set_default(50).set_brief("Scale count");
     const Scalar in_smin   = opt.get_float("scale_min",   "smin"  ).set_default(1) .set_brief("Factor of the local point spacing");
@@ -29,7 +29,7 @@ int main(int argc, char **argv)
     const Scalar in_irls_sigma = opt.get_float( "irls_sigma").set_default(0.5) .set_brief("IRLS factor");
     const int    in_irls_step  = opt.get_int(   "irls_step" ).set_default(5)   .set_brief("IRLS step");
 
-    const bool in_v = opt.get_bool(  "verbose",     "v"     ).set_default(false).set_brief("Add verbose messages");
+    const bool in_v = opt.get_bool("verbose", "v").set_default(false).set_brief("Add verbose messages");
 
     bool ok = opt.ok();
     if(!ok) return 1;
@@ -41,7 +41,7 @@ int main(int argc, char **argv)
 
     if(!points.has_normals())
     {
-        error().iff(in_v) << "Normal vectors are required! (use script pdpcComputeNormals)";
+        error().iff(in_v) << "Normal vectors are required!";
         return 1;
     }
 
