@@ -137,10 +137,18 @@ int main(int argc, char **argv)
                 Vector3 p = points[i];
                 mls.compute(points, p);
 
-                features.normal(i,j) = mls.fit().normal();
-                features.k1(i,j) = mls.fit().k1() * scale; // normalized curvature
-                features.k2(i,j) = mls.fit().k2() * scale;
-
+                if(mls.stable())
+                {
+                    features.normal(i,j) = mls.fit().normal();
+                    features.k1(i,j) = mls.fit().k1() * scale; // normalized curvature
+                    features.k2(i,j) = mls.fit().k2() * scale;
+                }
+                else
+                {
+                    features.normal(i,j) = Vector3::Zero();
+                    features.k1(i,j) = 0;
+                    features.k2(i,j) = 0;
+                }
             } // for i
         }
     } // for j
