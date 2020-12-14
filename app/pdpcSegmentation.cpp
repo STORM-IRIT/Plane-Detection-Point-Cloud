@@ -2,7 +2,9 @@
 #include <PDPC/Common/Log.h>
 #include <PDPC/PointCloud/Loader.h>
 #include <PDPC/PointCloud/PointCloud.h>
+#include <PDPC/PointCloud/orthonormal_basis.h>
 #include <PDPC/MultiScaleFeatures/MultiScaleFeatures.h>
+#include <PDPC/ScaleSpace/ScaleSampling.h>
 #include <PDPC/Segmentation/SeededKNNGraphRegionGrowing.h>
 #include <PDPC/Segmentation/MSSegmentation.h>
 
@@ -12,6 +14,7 @@ int main(int argc, char **argv)
 {
     Option opt(argc, argv);
     const std::string in_input    = opt.get_string("input",    "i").set_brief("Input point cloud (.ply/.obj)").set_required();
+    const std::string in_scales   = opt.get_string("scales",   "s").set_brief("Input scales (.txt)").set_required();
     const std::string in_features = opt.get_string("features", "f").set_brief("Input features (.txt/.bin)").set_required();
 
     const int    in_k     = opt.get_int(  "knn",  "k").set_default(10).set_brief("Region growing nearest neighbors count");
@@ -28,14 +31,22 @@ int main(int argc, char **argv)
     if(!ok) return 1;
     const int point_count = points.size();
 
+    ScaleSampling scales;
+    ok = scales.load(in_scales, in_v);
+    const int scale_count = scales.size();
+
     MultiScaleFeatures features;
     ok = features.load(in_features, in_v);
     if(!ok) return 1;
-    const int scale_count = features.m_scale_count;
 
     if(features.m_point_count != point_count)
     {
         error().iff(in_v) << "Point counts do not match: " << features.m_point_count << " != " << point_count;
+        return 1;
+    }
+    if(features.m_scale_count != scale_count)
+    {
+        error().iff(in_v) << "Scale counts do not match: " << features.m_scale_count << " != " << scale_count;
         return 1;
     }
 
@@ -51,11 +62,15 @@ int main(int argc, char **argv)
     #pragma omp parallel for
     for(int j=0; j<scale_count; ++j)
     {
-        info().iff(in_v) << "Processing scale " << j << "/" << scale_count-1 << " (" << int(Scalar(j)/(scale_count-1)*100) << "%)...";
+        #pragma omp critical (seg_info)
+        {
+            info().iff(in_v) << "Processing scale " << j << "/" << scale_count-1 << " (" << int(Scalar(j)/(scale_count-1)*100) << "%)...";
+        }
 
         std::vector<int> seeds;
+        Segmentation& seg = ms_seg[j];
 
-        SeededKNNGraphRegionGrowing::compute(points, ms_seg[j],
+        SeededKNNGraphRegionGrowing::compute(points, seg,
         // Comparison function for growing
         [&features,&seeds,j,threshold_angle,threshold_curva](int rg_l, int rg_i, int rg_j) -> bool
         {
@@ -75,12 +90,29 @@ int main(int argc, char **argv)
             PDPC_UNUSED(rg_l);
             seeds.push_back(rg_i);
         });
+
+        PDPC_ASSERT(seg.region_count() == int(seeds.size()));
+
+        // filtering
+        std::vector<bool> to_invalidate(seg.region_count(), false);
+        std::vector<std::vector<int>> regions;
+        seg.fill(regions);
+
+        for(int l=0; l<seg.region_count(); ++l)
+        {
+            const Vector3 plane_p = points.point(seeds[l]);
+            const Vector3 plane_n = points.normal(seeds[l]);
+            const Matrix3 plane_T = orthonormal_basis(plane_n);
+
+            Aabb2 aabb;
+            for(int i : regions[l])
+            {
+                aabb.extend( (plane_T * (points[i]-plane_p)).head<2>() );
+            }
+            to_invalidate[l] = aabb.diagonal().norm() < scale;
+        }
+
     }
-
-    // 2. Filtering ------------------------------------------------------------
-
-    PDPC_TODO;
-
 
     return 0;
 }
