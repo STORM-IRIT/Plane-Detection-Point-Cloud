@@ -1,5 +1,6 @@
 #include <PDPC/Common/Option.h>
 #include <PDPC/Common/Log.h>
+#include <PDPC/Common/Algorithms/has_duplicate.h>
 #include <PDPC/PointCloud/Loader.h>
 #include <PDPC/PointCloud/PointCloud.h>
 #include <PDPC/PointCloud/orthonormal_basis.h>
