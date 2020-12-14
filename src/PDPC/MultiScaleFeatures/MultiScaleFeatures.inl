@@ -46,7 +46,7 @@ int MultiScaleFeatures::index(int i, int j) const
 {
     PDPC_DEBUG_ASSERT(0 <= i && i < m_point_count);
     PDPC_DEBUG_ASSERT(0 <= j && j < m_scale_count);
-    return i * m_scale_count + j;
+    return j * m_point_count + i;
 }
 
 } // namespace pdpc
