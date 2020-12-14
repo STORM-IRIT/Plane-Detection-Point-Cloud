@@ -8,8 +8,11 @@
 #include <PDPC/Segmentation/SeededKNNGraphRegionGrowing.h>
 #include <PDPC/Segmentation/MSSegmentation.h>
 #include <PDPC/Segmentation/MSSegmentationGraph.h>
+#include <PDPC/Segmentation/RegionSet.h>
 #include <PDPC/Graph/HierarchicalGraph.h>
 #include <PDPC/Persistence/ComponentSet.h>
+
+#include <set>
 
 using namespace pdpc;
 
@@ -225,6 +228,56 @@ int main(int argc, char **argv)
         comp_set.data().erase(it, comp_set.data().end());
         comp_set.properties().resize(comp_set.data().size());
     }
+
+    // 4. Final regions --------------------------------------------------------
+    RegionSet reg_set(comp_set.size());
+    {
+        #pragma omp parallel for
+        for(int i=0; i<reg_set.size(); ++i)
+        {
+            std::set<int> indices;
+
+            for(int level=comp_set[i].birth_level(); level<=comp_set[i].death_level(); ++level)
+            {
+                for(int idx : ms_seg[level].indices(comp_set[i][level]))
+                {
+                    indices.insert(idx);
+                }
+            }
+
+            reg_set[i].assign(indices.begin(), indices.end());
+        }
+    }
+
+    // 5. Final segmentation ---------------------------------------------------
+    MSSegmentation comp_seg(scale_count);
+    {
+        comp_seg.for_each([&](Segmentation& seg)
+        {
+            seg.resize(point_count);
+            seg.resize_region(comp_set.size());
+        });
+
+        auto prog = Progress(comp_set.size());
+        #pragma omp parallel for
+        for(int idx_comp=0; idx_comp<comp_set.size(); ++idx_comp)
+        {
+            const Component& comp = comp_set[idx_comp];
+
+            for(int level=comp.birth_level(); level<=comp.death_level(); ++level)
+            {
+                const int label = comp.index(level);
+
+                for(int idx_point : ms_seg[level].indices(label))
+                {
+                    PDPC_DEBUG_ASSERT(comp_seg[level][idx_point] == -1);
+                    comp_seg[level].set_label(idx_point, idx_comp);
+                }
+            }
+            ++prog;
+        }
+    }
+
 
 
 
