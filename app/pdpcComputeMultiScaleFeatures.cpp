@@ -92,7 +92,7 @@ int main(int argc, char **argv)
     // for each scale
     for(int j=0; j<scale_count; ++j)
     {
-        info().iff(in_v) << "Processing scale " << j << "/" << scale_count-1 << " (" << int(Scalar(j)/(scale_count-1)*100) << "%)...";
+        info().iff(in_v) << j+1 << "/" << scale_count;
 
         const Scalar scale  = scales[j];
 
