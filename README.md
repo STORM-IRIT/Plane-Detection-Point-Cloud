@@ -19,6 +19,7 @@ Abstract Modern acquisition techniques generate detailed point clouds that sampl
 
 ### Compilation
 
+To compile the code and install the programs in `/usr/local` run the following commands 
 ```
 git clone git@github.com:ThibaultLejemble/Plane-Detection-Point-Cloud.git
 cd Plane-Detection-Point-Cloud
