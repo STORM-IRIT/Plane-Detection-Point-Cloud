@@ -280,7 +280,18 @@ int main(int argc, char **argv)
         }
     }
 
-    PDPC_TODO;
+    // save
+    std::ofstream ofs_seg(in_output + "_seg.bin");
+    comp_seg.write(ofs_seg);
+    ofs_seg.close();
+
+    std::ofstream ofs_reg(in_output + "_reg.bin");
+    reg_set.write(ofs_reg);
+    ofs_reg.close();
+
+    std::ofstream ofs_comp(in_output + "_comp.bin");
+    comp_set.write(ofs_comp);
+    ofs_comp.close();
 
     return 0;
 }
