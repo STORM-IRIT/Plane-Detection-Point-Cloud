@@ -24,9 +24,9 @@ git clone git@github.com:ThibaultLejemble/Plane-Detection-Point-Cloud.git
 cd Plane-Detection-Point-Cloud
 mkdir build
 cd build
-cmake -DCMAKE_BUILD_TYPE=Release ..
+cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr/local ..
 make -j 
-make install
+sudo make install
 ```
 
 Tested using
