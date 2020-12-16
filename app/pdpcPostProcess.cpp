@@ -23,6 +23,7 @@ int main(int argc, char **argv)
 
     const std::vector<std::string> in_ranges = opt.get_strings("range" ).set_brief("Persistence ranges");
     const std::vector<std::string> in_scales = opt.get_strings("scales").set_brief("Scales threshold");
+    const std::vector<std::string> in_pers   = opt.get_strings("persistence", "pers").set_brief("Persistence threshold");
 
     const bool in_col = opt.get_bool("colorize", "col").set_default(false).set_brief("Colorize point cloud and save it as ply");
 
@@ -108,6 +109,42 @@ int main(int argc, char **argv)
         }
     }
 
+    // Persistence threshold ---------------------------------------------------
+    if(!in_pers.empty())
+    {
+        for(const auto& str : in_pers)
+        {
+            std::vector<int> labeling(point_count, -1);
+            const int pers = std::stoi(str);
+
+            for(int c=0; c<comp_set.size(); ++c)
+            {
+                if(comp_set[c].persistence() >= pers)
+                {
+                    for(int i : reg_set[c])
+                        labeling[i] = c;
+                }
+                else
+                {
+                    // comp are sorted by pers
+                    break;
+                }
+            }
+            Segmentation seg(labeling);
+            seg.invalidate_small_region(10);
+
+            // save
+            if(in_col)
+            {
+                points.request_colors();
+                const auto colormap = Colormap::Tab20();
+                seg.set_colors(points.colors_data(), Colors::Black(), colormap);
+                Loader::Save(in_output + "_" + str::to_string(pers,3) + ".ply", points);
+            }
+            debug() << "TODO save txt file";
+        }
+    }
+
     // Scale -------------------------------------------------------------------
     if(!in_scales.empty())
     {
@@ -153,7 +190,7 @@ int main(int argc, char **argv)
                 points.request_colors();
                 const auto colormap = Colormap::Tab20();
                 seg.set_colors(points.colors_data(), Colors::Black(), colormap);
-                Loader::Save(in_output + "_range_" + str::to_string(idx_scale,3) + ".ply", points);
+                Loader::Save(in_output + "_" + str::to_string(idx_scale,3) + ".ply", points);
             }
             debug() << "TODO save txt file";
         }
