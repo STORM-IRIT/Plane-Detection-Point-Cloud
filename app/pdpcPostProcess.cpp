@@ -15,10 +15,15 @@ using namespace pdpc;
 int main(int argc, char **argv)
 {
     Option opt(argc, argv);
-    const std::string in_input = opt.get_string("input", "i").set_brief("Input point cloud (.ply/.obj)").set_required();
-    const std::string in_seg   = opt.get_string("seg",   "s").set_brief("TODO").set_default("output_seg.bin");
-    const std::string in_reg   = opt.get_string("reg",   "r").set_brief("TODO").set_default("output_reg.bin");
-    const std::string in_comp  = opt.get_string("comp",  "c").set_brief("TODO").set_default("output_comp.bin");
+    const std::string in_input  = opt.get_string("input",  "i").set_brief("Input point cloud (.ply/.obj)").set_required();
+    const std::string in_seg    = opt.get_string("seg",    "s").set_brief("TODO").set_default("output_seg.bin");
+    const std::string in_reg    = opt.get_string("reg",    "r").set_brief("TODO").set_default("output_reg.bin");
+    const std::string in_comp   = opt.get_string("comp",   "c").set_brief("TODO").set_default("output_comp.bin");
+    const std::string in_output = opt.get_string("output", "o").set_brief("Output name").set_default("output");
+
+    const std::vector<std::string> in_ranges = opt.get_strings("range").set_brief("Persistence range");
+
+    const bool in_col = opt.get_bool("colorize", "col").set_default(false).set_brief("Colorize point cloud and save it as ply");
 
     const bool in_v = opt.get_bool("verbose", "v").set_default(false).set_brief("Add verbose messages");
 
@@ -49,9 +54,9 @@ int main(int argc, char **argv)
     ifs_comp.close();
 
     const int scale_count = comp_seg.size();
-    constexpr int scale_sup = 1000; //?
 
-    const int scale_count_sup = std::min(scale_count, scale_sup);
+//    constexpr int scale_sup = 1000; //?
+//    const int scale_count_sup = std::min(scale_count, scale_sup);
 
     // info
     info() << comp_set.size() << " components";
@@ -63,81 +68,120 @@ int main(int argc, char **argv)
                << " (" << reg_set[i].size() << " pts)";
     }
 
-    // -------------------------------------------------------------------------
-    // 1. BestComponentPerScale
+    // Persistence range -------------------------------------------------------
+    if(!in_ranges.empty())
     {
-        std::vector<int> labeling(point_count, -1);
-        MSSegmentation ms_seg(scale_count_sup);
-
-        for(int idx_scale=0; idx_scale<scale_count_sup; ++idx_scale)
+        if(in_ranges.size() % 2 == 0)
         {
-            info() << "Processing scale " << idx_scale << "/" << scale_count_sup-1;
-
-            std::fill(labeling.begin(), labeling.end(), -1);
-
-            #pragma omp parallel for
-            for(int idx_point=0; idx_point<point_count; ++idx_point)
+            for(int n=0; n<int(in_ranges.size())/2; ++n)
             {
-                int max_persistence = 0;
-                int max_idx_comp = -1;
+                const int pers_min = std::stoi(in_ranges[2*n + 0]);
+                const int pers_max = std::stoi(in_ranges[2*n + 1]);
+                info().iff(in_v) << "Extracting component with persistence in "
+                                 << "(" << pers_min << "," << pers_max << ")";
+                if(pers_max < pers_min) warning().iff(in_v) << "Persistence range must be ordered, the output will be empty";
 
-                for(int j=0; j<scale_count_sup; ++j)
+                Segmentation res(point_count);
+                res.resize_region(comp_set.size());
+                for(int c=0; c<comp_set.size(); ++c)
                 {
-                    int idx_comp = comp_seg[j][idx_point];
-                    if(idx_comp == -1) continue;
-
-                    const Component& comp = comp_set[idx_comp];
-
-                    if(comp.birth_level() <= idx_scale && idx_scale <= comp.death_level())
+                    if(pers_min <= comp_set[c].persistence() && comp_set[c].persistence() <= pers_max)
                     {
-                        if(comp.persistence() > max_persistence)
-                        {
-                            max_persistence = comp.persistence();
-                            max_idx_comp = idx_comp;
-                        }
+                        for(int i : reg_set[c]) res.set_label(i, c);
                     }
                 }
-                labeling[idx_point] = max_idx_comp;
+
+                if(in_col)
+                {
+                    points.request_colors();
+                    const auto colormap = Colormap::Tab20();
+                    res.set_colors(points.colors_data(), Colors::Black(), colormap);
+                    Loader::Save(in_output + "_range_" + str::to_string(n,3) + ".ply", points);
+                }
+                debug() << "TODO save txt file";
             }
-            ms_seg[idx_scale] = Segmentation(labeling);
-            ms_seg[idx_scale].invalidate_small_region(10);
         }
-
-
-        // save
-        points.request_colors();
-        const auto colormap = Colormap::Tab20();
-        for(int idx_scale=0; idx_scale<scale_count_sup; ++idx_scale)
+        else
         {
-            const Segmentation& seg = ms_seg[idx_scale];
-            seg.set_colors(points.colors_data(), Colors::Black(), colormap);
-            Loader::Save("test1_" + str::to_string(idx_scale,2)+".ply", points);
+            info().iff(in_v) << "Persistence ranges input must contains an even number of persistence value";
         }
     }
 
-    // -------------------------------------------------------------------------
-    // 2. Show components by persistence (plugin Action)
-    {
-        points.request_colors(Colors::Black());
-        const auto colormap = Colormap::Tab20();
-        for(int pers=0; pers<scale_count; ++pers)
-        {
-            for(int idx_comp=0; idx_comp<comp_set.size(); ++idx_comp)
-            {
-                if(comp_set[idx_comp].persistence() >= pers)
-                {
-                    for(int i : reg_set[idx_comp])
-                        points.color(i) = colormap[idx_comp];
-                }
-                else
-                {
-                    // comp are sorted by pers
-                    break;
-                }
-            }
-            Loader::Save("test2_" + str::to_string(pers,2)+".ply", points);
-        }
-    }
+//    // -------------------------------------------------------------------------
+//    // 1. BestComponentPerScale
+//    {
+//        std::vector<int> labeling(point_count, -1);
+//        MSSegmentation ms_seg(scale_count_sup);
+
+//        for(int idx_scale=0; idx_scale<scale_count_sup; ++idx_scale)
+//        {
+//            info() << "Processing scale " << idx_scale << "/" << scale_count_sup-1;
+
+//            std::fill(labeling.begin(), labeling.end(), -1);
+
+//            #pragma omp parallel for
+//            for(int idx_point=0; idx_point<point_count; ++idx_point)
+//            {
+//                int max_persistence = 0;
+//                int max_idx_comp = -1;
+
+//                for(int j=0; j<scale_count_sup; ++j)
+//                {
+//                    int idx_comp = comp_seg[j][idx_point];
+//                    if(idx_comp == -1) continue;
+
+//                    const Component& comp = comp_set[idx_comp];
+
+//                    if(comp.birth_level() <= idx_scale && idx_scale <= comp.death_level())
+//                    {
+//                        if(comp.persistence() > max_persistence)
+//                        {
+//                            max_persistence = comp.persistence();
+//                            max_idx_comp = idx_comp;
+//                        }
+//                    }
+//                }
+//                labeling[idx_point] = max_idx_comp;
+//            }
+//            ms_seg[idx_scale] = Segmentation(labeling);
+//            ms_seg[idx_scale].invalidate_small_region(10);
+//        }
+
+
+//        // save
+//        points.request_colors();
+//        const auto colormap = Colormap::Tab20();
+//        for(int idx_scale=0; idx_scale<scale_count_sup; ++idx_scale)
+//        {
+//            const Segmentation& seg = ms_seg[idx_scale];
+//            seg.set_colors(points.colors_data(), Colors::Black(), colormap);
+//            Loader::Save("test1_" + str::to_string(idx_scale,2)+".ply", points);
+//        }
+//    }
+
+//    // -------------------------------------------------------------------------
+//    // 2. Show components by persistence (plugin Action)
+//    {
+//        points.request_colors(Colors::Black());
+//        const auto colormap = Colormap::Tab20();
+//        for(int pers=0; pers<scale_count; ++pers)
+//        {
+//            for(int idx_comp=0; idx_comp<comp_set.size(); ++idx_comp)
+//            {
+//                if(comp_set[idx_comp].persistence() >= pers)
+//                {
+//                    for(int i : reg_set[idx_comp])
+//                        points.color(i) = colormap[idx_comp];
+//                }
+//                else
+//                {
+//                    // comp are sorted by pers
+//                    break;
+//                }
+//            }
+//            Loader::Save("test2_" + str::to_string(pers,2)+".ply", points);
+//        }
+//    }
 
 
 
