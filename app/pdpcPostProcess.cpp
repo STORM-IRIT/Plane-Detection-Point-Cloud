@@ -159,6 +159,30 @@ int main(int argc, char **argv)
         }
     }
 
+    // TEST 1 ------------------------------------------------------------------
+    // DisplayBestComponentAction::update_all()
+    // select most pers comp in min/max scale range
+    // min persistence
+    // min points per regions
+
+    // TEST 2 ------------------------------------------------------------------
+    // DisplayBestComponent2Action::update_all()
+    // select most pers comp including a given scale
+    // min persistence
+    // min points per regions
+
+    // TEST 3 ------------------------------------------------------------------
+    // DisplayBestComponentPerScaleAction::on_scale_changed
+    // select comp from most to less pers at a given scale
+
+    // TEST 4 ------------------------------------------------------------------
+    //
+    //
+
+
+
+
+
 //    // -------------------------------------------------------------------------
 //    // 2. Show components by persistence (plugin Action)
 //    {
