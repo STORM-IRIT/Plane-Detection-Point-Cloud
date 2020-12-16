@@ -58,7 +58,7 @@ void MSSegmentationGraph::create(const MSSegmentation& msSegmentation, Hierarchi
         }
     }
 
-//    PDPC_DEBUG_ASSERT(valid(msSegmentation, g));
+    PDPC_DEBUG_ASSERT(valid(msSegmentation, g));
 }
 
 void MSSegmentationGraph::reorganize(MSSegmentation& msSegmentation, HierarchicalGraph& g)
@@ -116,7 +116,7 @@ void MSSegmentationGraph::reorganize(MSSegmentation& msSegmentation, Hierarchica
             }
         }
     }
-//    PDPC_DEBUG_ASSERT(valid(msSegmentation, g));
+    PDPC_DEBUG_ASSERT(valid(msSegmentation, g));
     // -------------------------------------------------------------------------
     // 2.                        -----------------------------------------------
     {
@@ -184,7 +184,7 @@ void MSSegmentationGraph::reorganize(MSSegmentation& msSegmentation, Hierarchica
             }
         }
     }
-//    PDPC_DEBUG_ASSERT(valid(msSegmentation, g));
+    PDPC_DEBUG_ASSERT(valid(msSegmentation, g));
     // 3 reset labels
     for(int level=0; level<level_count; ++level)
     {
@@ -196,10 +196,10 @@ void MSSegmentationGraph::reorganize(MSSegmentation& msSegmentation, Hierarchica
         }
     }
 
-//    PDPC_DEBUG_ASSERT(valid(msSegmentation, g));
+    PDPC_DEBUG_ASSERT(valid(msSegmentation, g));
 }
 
-bool /*MSSegmentationGraph::*/valid(const MSSegmentation& msSegmentation, const HierarchicalGraph& g)
+bool MSSegmentationGraph::valid(const MSSegmentation& msSegmentation, const HierarchicalGraph& g)
 {
     PDPC_DEBUG_ASSERT(g.node_properties(0).has("label"));
     PDPC_DEBUG_ASSERT(g.node_properties(0).has("size"));
@@ -219,17 +219,17 @@ bool /*MSSegmentationGraph::*/valid(const MSSegmentation& msSegmentation, const 
 
     for(int level=0; level<g.level_count(); ++level)
     {
-        int regionCount = msSegmentation[level].region_count()-1; // -1 for to ignore invalid region
-        int nodeCount   = g.node_count(level);
+        const int regionCount = msSegmentation[level].region_count();
+        const int nodeCount   = g.node_count(level);
         if(regionCount != nodeCount)
         {
-            PDPC_DEBUG_ASSERT(false); // issue here...
+            PDPC_DEBUG_ASSERT(false);
             return false;
         }
         for(int n=0; n<g.node_count(level); ++n)
         {
-            int regionSize = g.node_property<Scalar>(prop_size, level, n);
-            int nodeSize   = msSegmentation[level].size(n);
+            const int regionSize = g.node_property<Scalar>(prop_size, level, n);
+            const int nodeSize   = msSegmentation[level].size(n);
             if(regionSize != nodeSize)
             {
                 PDPC_DEBUG_ASSERT(false);
