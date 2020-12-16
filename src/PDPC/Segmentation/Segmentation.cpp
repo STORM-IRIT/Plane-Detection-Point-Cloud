@@ -1,5 +1,5 @@
 #include <PDPC/Segmentation/Segmentation.h>
-#include <PDPC/Common/Macro.h>
+#include <PDPC/Common/Assert.h>
 
 #include <algorithm>
 
@@ -40,12 +40,12 @@ bool Segmentation::is_consistent() const
     {
         int l = this->label(idx);
         int c = l+1;
-        assert(c < int(counts.size()));
+        PDPC_DEBUG_ASSERT(c < int(counts.size()));
         ++counts[c];
     }
     if(counts != m_counts)
     {
-        assert(false);
+        PDPC_DEBUG_ERROR;
         return false;
     }
     return true;
@@ -61,8 +61,8 @@ void Segmentation::fill(std::vector<std::vector<int>>& seg) const
         const int l = label(idx);
         if(l != invalid())
         {
-            assert(0 <= l);
-            assert(l < int(seg.size()));
+            PDPC_DEBUG_ASSERT(0 <= l);
+            PDPC_DEBUG_ASSERT(l < int(seg.size()));
             seg[l].push_back(idx);
         }
     }
@@ -84,7 +84,7 @@ bool Segmentation::operator == (const std::vector<int>& labels) const
 
 std::ostream& Segmentation::write(std::ostream& os) const
 {
-    assert(this->is_consistent());
+    PDPC_DEBUG_ASSERT(this->is_consistent());
     const int size = this->size();
     os.write(reinterpret_cast<const char*>(&size), sizeof(int));
     os.write(reinterpret_cast<const char*>(m_labels.data()), size*sizeof(int));
@@ -95,13 +95,13 @@ std::istream& Segmentation::read(std::istream& is)
 {
     int size = -1;
     is.read(reinterpret_cast<char*>(&size), sizeof(int));
-    assert(0 <= size);
+    PDPC_DEBUG_ASSERT(0 <= size);
 
     m_labels.resize(size);
     is.read(reinterpret_cast<char*>(m_labels.data()), size*sizeof(int));
 
     this->compute_counts();
-    assert(this->is_consistent());
+    PDPC_DEBUG_ASSERT(this->is_consistent());
     return is;
 }
 
@@ -169,7 +169,7 @@ void Segmentation::resize(int size, int l)
 
 void Segmentation::resize_region(int region_count)
 {
-    assert(region_count > this->region_count()); // we can only add empty region
+    PDPC_DEBUG_ASSERT(region_count > this->region_count()); // we can only add empty region
     m_counts.resize(region_count, 0);
 }
 
@@ -240,7 +240,7 @@ void Segmentation::invalidate_region(int l)
 //!
 void Segmentation::invalidate_regions(const std::vector<bool>& to_invalidate)
 {
-    assert(int(to_invalidate.size()) == region_count());
+    PDPC_DEBUG_ASSERT(int(to_invalidate.size()) == region_count());
 
     int invalidated_count = 0;
     for(int idx=0; idx<size(); ++idx)
@@ -264,10 +264,9 @@ void Segmentation::invalidate_regions(const std::vector<bool>& to_invalidate)
 }
 
 //TODO make this clear:
-// same as invalidate_regions() but including the -1 invalid label ?????????????
+// same as invalidate_regions() but to_unlabel goes from label_inf to label_sup
 void Segmentation::invalidate(const std::vector<bool>& to_unlabel)
 {
-    PDPC_TODO; // see above
     int count = 0;
     int linf  = label_inf();
 
@@ -454,13 +453,13 @@ void Segmentation::make_full()
 
 int Segmentation::count(int l) const
 {
-    assert(0 <= l+1 && l+1 < int(m_counts.size()));
+    PDPC_DEBUG_ASSERT(0 <= l+1 && l+1 < int(m_counts.size()));
     return m_counts[l+1];
 }
 
 int& Segmentation::count(int l)
 {
-    assert(0 <= l+1 && l+1 < int(m_counts.size()));
+    PDPC_DEBUG_ASSERT(0 <= l+1 && l+1 < int(m_counts.size()));
     return m_counts[l+1];
 }
 
