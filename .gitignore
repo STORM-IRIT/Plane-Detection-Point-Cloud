@@ -37,3 +37,6 @@ buildDebug/
 buildRelease/
 work/
 test/
+figures/*.bin
+figures/*.txt
+figures/*.ply
