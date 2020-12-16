@@ -1,5 +1,7 @@
 #include <PDPC/Common/Option.h>
 #include <PDPC/Common/Log.h>
+#include <PDPC/Common/Colors.h>
+#include <PDPC/Common/String.h>
 #include <PDPC/Common/Algorithms/has_duplicate.h>
 #include <PDPC/PointCloud/Loader.h>
 #include <PDPC/PointCloud/PointCloud.h>
@@ -61,6 +63,10 @@ int main(int argc, char **argv)
         return 1;
     }
 
+    // debug
+    //TODO remove this
+    points.request_colors();
+
     // 1. Segmentations --------------------------------------------------------
     info().iff(in_v) << "Performing " << scale_count << " planar region growing";
     MSSegmentation ms_seg(scale_count, Segmentation(point_count));
@@ -70,12 +76,12 @@ int main(int argc, char **argv)
 
         points.build_knn_graph(in_k);
 
-        #pragma omp parallel for
+//        #pragma omp parallel for
         for(int j=0; j<scale_count; ++j)
         {
             #pragma omp critical (seg_info)
             {
-                info().iff(in_v) << "Processing scale " << j << "/" << scale_count-1 << " (" << int(Scalar(j)/(scale_count-1)*100) << "%)...";
+                info().iff(in_v) << j+1 << "/" << scale_count;
             }
 
             // 1.1 Region growing ----------------------------------------------
@@ -110,11 +116,22 @@ int main(int argc, char **argv)
             std::vector<std::vector<int>> regions;
             seg.fill(regions);
 
+            constexpr int DEBUG_POINT_IDX   = 355470;
+            const     int DEBUG_REGION_IDX  = seg[DEBUG_POINT_IDX];
+            const     int DEBUG_REGION_SIZE = seg.size(DEBUG_REGION_IDX);
+
+            if(j == 18)
+            {
+                debug() << "DEBUG_POINT_IDX   = " << DEBUG_POINT_IDX  ;
+                debug() << "DEBUG_REGION_IDX  = " << DEBUG_REGION_IDX ;
+                debug() << "DEBUG_REGION_SIZE = " << DEBUG_REGION_SIZE;
+            }
+
             for(int l=0; l<seg.region_count(); ++l)
             {
                 const Vector3 plane_p = points.point(seeds[l]);
                 const Vector3 plane_n = points.normal(seeds[l]);
-                const Matrix3 plane_T = orthonormal_basis(plane_n);
+                const Matrix3 plane_T = orthonormal_basis(plane_n).transpose();
 
                 Aabb2 aabb;
                 for(int i : regions[l])
@@ -122,9 +139,40 @@ int main(int argc, char **argv)
                     aabb.extend( (plane_T * (points[i]-plane_p)).head<2>() );
                 }
                 to_invalidate[l] = aabb.diagonal().norm() < scales[j];
+//                if(j == 18 && to_invalidate[l] && regions[l].size() > 20)
+//                {
+//                    debug() << "Invalidate region " << l << " with " << regions[l].size() << " pts";
+//                }
             }
-            seg.invalidate(to_invalidate);
+            if(j == 18)
+            {
+                debug() << "INVALIDATE   = " << to_invalidate[DEBUG_REGION_IDX];
+            }
+
+            // debug after
+//            #pragma omp critical (debug_after)
+            if(j == 18)
+            {
+                const auto colormap = Colormap::Tab20();
+                seg.set_colors(points.colors_data(), Colors::Black(), colormap);
+                debug() << "LABEL = " << seg[DEBUG_POINT_IDX];
+                debug() << "COLOR = " << points.color(DEBUG_POINT_IDX).transpose();
+                Loader::Save("debug_before" + str::to_string(j,2)+".ply", points);
+            }
+
+            seg.invalidate_regions(to_invalidate);
             seg.make_full();
+
+            // debug after
+//            #pragma omp critical (debug_before)
+            if(j == 18)
+            {
+                const auto colormap = Colormap::Tab20();
+                seg.set_colors(points.colors_data(), Colors::Black(), colormap);
+                debug() << "LABEL = " << seg[DEBUG_POINT_IDX];
+                debug() << "COLOR = " << points.color(DEBUG_POINT_IDX).transpose();
+                Loader::Save("debug_after" + str::to_string(j,2)+".ply", points);
+            }
         }
     }
 
