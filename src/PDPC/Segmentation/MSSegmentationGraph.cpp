@@ -1,6 +1,7 @@
 #include <PDPC/Graph/HierarchicalGraph.h>
 #include <PDPC/Segmentation/MSSegmentation.h>
 #include <PDPC/Segmentation/MSSegmentationGraph.h>
+#include <PDPC/Common/Assert.h>
 
 #include <numeric>
 
@@ -51,13 +52,13 @@ void MSSegmentationGraph::create(const MSSegmentation& msSegmentation, Hierarchi
             if(labell != Segmentation::INVALID() && labelk != Segmentation::INVALID())
             {
                 int e = g.get_or_add_edge(l, labelk, labell);
-                assert(e != -1);
+                PDPC_DEBUG_ASSERT(e != -1);
                 g.edge_property<Scalar>(prop_weight, l, e) += Scalar(1);
             }
         }
     }
 
-    assert(valid(msSegmentation, g));
+    PDPC_DEBUG_ASSERT(valid(msSegmentation, g));
 }
 
 void MSSegmentationGraph::reorganize(MSSegmentation& msSegmentation, HierarchicalGraph& g)
@@ -65,10 +66,10 @@ void MSSegmentationGraph::reorganize(MSSegmentation& msSegmentation, Hierarchica
     const int level_count = g.level_count();
     const int top_level   = level_count-1;
 
-    assert(g.node_properties(0).has("label"));
-    assert(g.node_properties(0).has("size"));
-    assert(g.node_properties(0).has("id"));
-    assert(g.edge_properties(0).has("weight"));
+    PDPC_DEBUG_ASSERT(g.node_properties(0).has("label"));
+    PDPC_DEBUG_ASSERT(g.node_properties(0).has("size"));
+    PDPC_DEBUG_ASSERT(g.node_properties(0).has("id"));
+    PDPC_DEBUG_ASSERT(g.edge_properties(0).has("weight"));
 
     int prop_label  = g.node_properties(0).index("label");
     int prop_size   = g.node_properties(0).index("size");
@@ -115,7 +116,7 @@ void MSSegmentationGraph::reorganize(MSSegmentation& msSegmentation, Hierarchica
             }
         }
     }
-    assert(valid(msSegmentation, g));
+    PDPC_DEBUG_ASSERT(valid(msSegmentation, g));
     // -------------------------------------------------------------------------
     // 2.                        -----------------------------------------------
     {
@@ -183,7 +184,7 @@ void MSSegmentationGraph::reorganize(MSSegmentation& msSegmentation, Hierarchica
             }
         }
     }
-    assert(valid(msSegmentation, g));
+    PDPC_DEBUG_ASSERT(valid(msSegmentation, g));
     // 3 reset labels
     for(int level=0; level<level_count; ++level)
     {
@@ -195,15 +196,15 @@ void MSSegmentationGraph::reorganize(MSSegmentation& msSegmentation, Hierarchica
         }
     }
 
-    assert(valid(msSegmentation, g));
+    PDPC_DEBUG_ASSERT(valid(msSegmentation, g));
 }
 
 bool MSSegmentationGraph::valid(const MSSegmentation& msSegmentation, const HierarchicalGraph& g)
 {
-    assert(g.node_properties(0).has("label"));
-    assert(g.node_properties(0).has("size"));
-    assert(g.node_properties(0).has("id"));
-    assert(g.edge_properties(0).has("weight"));
+    PDPC_DEBUG_ASSERT(g.node_properties(0).has("label"));
+    PDPC_DEBUG_ASSERT(g.node_properties(0).has("size"));
+    PDPC_DEBUG_ASSERT(g.node_properties(0).has("id"));
+    PDPC_DEBUG_ASSERT(g.edge_properties(0).has("weight"));
 
 //    auto prop_label  = g.node_properties(0).index("label");
     auto prop_size   = g.node_properties(0).index("size");
@@ -212,7 +213,7 @@ bool MSSegmentationGraph::valid(const MSSegmentation& msSegmentation, const Hier
 
     if(msSegmentation.size() != g.level_count())
     {
-        assert(false);
+        PDPC_DEBUG_ASSERT(false);
         return false;
     }
 
@@ -222,7 +223,7 @@ bool MSSegmentationGraph::valid(const MSSegmentation& msSegmentation, const Hier
         int nodeCount   = g.node_count(level);
         if(regionCount != nodeCount)
         {
-            assert(false);
+            PDPC_DEBUG_ASSERT(false);
             return false;
         }
         for(int n=0; n<g.node_count(level); ++n)
@@ -231,7 +232,7 @@ bool MSSegmentationGraph::valid(const MSSegmentation& msSegmentation, const Hier
             int nodeSize   = msSegmentation[level].size(n);
             if(regionSize != nodeSize)
             {
-                assert(false);
+                PDPC_DEBUG_ASSERT(false);
                 return false;
             }
         }
@@ -251,7 +252,7 @@ float MSSegmentationGraph::jaccard(const HierarchicalGraph& hgraph, int level_ed
 
     Scalar index = edge_weight / (size_source + size_target - edge_weight);
 
-    assert(0 <= index && index <= 1);
+    PDPC_DEBUG_ASSERT(0 <= index && index <= 1);
     return index;
 }
 
