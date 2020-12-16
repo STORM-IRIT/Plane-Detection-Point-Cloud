@@ -7,6 +7,7 @@
 #include <PDPC/MultiScaleFeatures/MultiScaleFeatures.h>
 #include <PDPC/RIMLS/RIMLSOperator.h>
 
+#include <algorithm>
 #include <numeric>
 
 using namespace pdpc;
