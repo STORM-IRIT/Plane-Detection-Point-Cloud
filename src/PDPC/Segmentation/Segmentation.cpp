@@ -1,4 +1,5 @@
 #include <PDPC/Segmentation/Segmentation.h>
+#include <PDPC/Common/Macro.h>
 
 #include <algorithm>
 
@@ -263,9 +264,10 @@ void Segmentation::invalidate_regions(const std::vector<bool>& to_invalidate)
 }
 
 //TODO make this clear:
-// same as invalidate_regions() but including the -1 invalue label ?????????????
+// same as invalidate_regions() but including the -1 invalid label ?????????????
 void Segmentation::invalidate(const std::vector<bool>& to_unlabel)
 {
+    PDPC_TODO; // see above
     int count = 0;
     int linf  = label_inf();
 
