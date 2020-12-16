@@ -2,6 +2,7 @@
 #include <PDPC/Common/Assert.h>
 
 #include <algorithm>
+#include <numeric>
 
 namespace pdpc {
 
@@ -38,11 +39,26 @@ bool Segmentation::is_consistent() const
     std::vector<int> counts(m_counts.size(), 0);
     for(uint idx=0; idx<m_labels.size(); ++idx)
     {
-        int l = this->label(idx);
-        int c = l+1;
-        PDPC_DEBUG_ASSERT(c < int(counts.size()));
+        const int l = this->label(idx);
+        const int c = l+1; // +1 for the invalid region
+        PDPC_DEBUG_ASSERT(0 <= c && c < int(counts.size()));
         ++counts[c];
     }
+
+    const int this_size = std::accumulate(m_counts.begin(), m_counts.end(), 0);
+    if(this_size != int(m_labels.size()))
+    {
+        PDPC_DEBUG_ERROR;
+        return false;
+    }
+
+    const int actual_size = std::accumulate(counts.begin(), counts.end(), 0);
+    if(actual_size != int(m_labels.size()))
+    {
+        PDPC_DEBUG_ERROR;
+        return false;
+    }
+
     if(counts != m_counts)
     {
         PDPC_DEBUG_ERROR;
@@ -146,7 +162,7 @@ int Segmentation::non_empty_region_count() const
 
 void Segmentation::resize(int size, int l)
 {
-    int old_size = this->size();
+    const int old_size = this->size();
     if(size < old_size)
     {
         for(int idx=size; idx<old_size; ++idx)
@@ -161,7 +177,7 @@ void Segmentation::resize(int size, int l)
         {
             m_counts.resize(counts_size(l), 0);
         }
-        int diff  = size - old_size;
+        const int diff  = size - old_size;
         count(l) += diff;
         m_labels.resize(size, l);
     }
@@ -209,7 +225,7 @@ void Segmentation::push_back(int l)
 
 void Segmentation::set_label(int idx, int l)
 {
-    int old_label = label(idx);
+    const int old_label = label(idx);
 
     --count(old_label);
     ++count(l);

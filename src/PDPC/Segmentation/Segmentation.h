@@ -82,6 +82,11 @@ public:
     void resize(int size, int l = invalid());
     void resize_region(int region_count);
 
+    // Warning!
+    // resize_region(N)
+    // M = region_count()
+    // N != M
+
     void reserve(int capacity);
     void reserve_region(int region_capacity);
 
