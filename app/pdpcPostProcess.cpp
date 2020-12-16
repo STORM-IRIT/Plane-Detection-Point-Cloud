@@ -54,7 +54,7 @@ int main(int argc, char **argv)
     const int scale_count_sup = std::min(scale_count, scale_sup);
 
     // info
-    info() << comp_set.size() << " compoents";
+    info() << comp_set.size() << " components";
     for(int i=0; i<comp_set.size(); ++i)
     {
         info() << i << ": " << comp_set[i].birth_level() << " --- "
