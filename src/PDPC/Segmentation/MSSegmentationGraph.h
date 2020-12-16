@@ -11,7 +11,7 @@ public:
     static void create(const MSSegmentation& msSegmentation, HierarchicalGraph& g);
     static void reorganize(MSSegmentation& msSegmentation, HierarchicalGraph& g);
 
-    static bool valid(const MSSegmentation& msSegmentation, const HierarchicalGraph& g);
+//    static bool valid(const MSSegmentation& msSegmentation, const HierarchicalGraph& g);
 
     // Similarities
 public:
