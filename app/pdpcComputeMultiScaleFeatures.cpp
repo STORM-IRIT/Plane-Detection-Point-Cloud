@@ -26,7 +26,7 @@ int main(int argc, char **argv)
 
     const Scalar in_mls_eps    = opt.get_float( "mls_eps"   ).set_default(0.01).set_brief("MLS convergence threshold (factor of the scale)");
     const int    in_mls_max    = opt.get_int(   "mls_max"   ).set_default(20)  .set_brief("MLS step max");
-    const Scalar in_irls_sigma = opt.get_float( "irls_sigma").set_default(0.5) .set_brief("IRLS factor");
+    const Scalar in_irls_sigma = opt.get_float( "irls_sigma").set_default(1.0) .set_brief("IRLS factor");
     const int    in_irls_step  = opt.get_int(   "irls_step" ).set_default(5)   .set_brief("IRLS step");
 
     const bool in_v = opt.get_bool("verbose", "v").set_default(false).set_brief("Add verbose messages");
