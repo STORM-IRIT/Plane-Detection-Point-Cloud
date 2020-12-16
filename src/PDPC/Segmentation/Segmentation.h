@@ -1,10 +1,10 @@
 ﻿#pragma once
 
 #include <PDPC/Segmentation/SegmentationIterators.h>
+#include <PDPC/Common/Assert.h>
 
 #include <vector>
 #include <iostream>
-#include <cassert>
 
 namespace pdpc {
 

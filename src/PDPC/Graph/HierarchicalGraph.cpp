@@ -25,17 +25,17 @@ bool HierarchicalGraph::is_consistent() const
 {
     if(!m_nodes.empty() && m_edges.size() != m_nodes.size()-1)
     {
-        assert(false);
+        PDPC_DEBUG_ASSERT(false);
         return false;
     }
     if(m_nodes.size() != m_node_properties.size())
     {
-        assert(false);
+        PDPC_DEBUG_ASSERT(false);
         return false;
     }
     if(m_edges.size() != m_edge_properties.size())
     {
-        assert(false);
+        PDPC_DEBUG_ASSERT(false);
         return false;
     }
     for(uint i=0; i<m_node_properties.size()-1; ++i)
@@ -43,7 +43,7 @@ bool HierarchicalGraph::is_consistent() const
         if(!m_node_properties[i]._is_valid() ||
            m_node_properties[i].size() != int(m_nodes[i].size()))
         {
-            assert(false);
+            PDPC_DEBUG_ASSERT(false);
             return false;
         }
     }
@@ -52,7 +52,7 @@ bool HierarchicalGraph::is_consistent() const
         if(!m_edge_properties[i]._is_valid() ||
            m_edge_properties[i].size() != int(m_edges[i].size()))
         {
-            assert(false);
+            PDPC_DEBUG_ASSERT(false);
             return false;
         }
     }
@@ -60,7 +60,7 @@ bool HierarchicalGraph::is_consistent() const
     {
         if(!m_node_properties[0].match(m_node_properties[i]))
         {
-            assert(false);
+            PDPC_DEBUG_ASSERT(false);
             return false;
         }
     }
@@ -68,7 +68,7 @@ bool HierarchicalGraph::is_consistent() const
     {
         if(!m_edge_properties[0].match(m_edge_properties[i]))
         {
-            assert(false);
+            PDPC_DEBUG_ASSERT(false);
             return false;
         }
     }
@@ -204,7 +204,7 @@ HierarchicalGraph& HierarchicalGraph::from_graph(const Graph& g, bool add_prop)
 {
     this->clear(); // clear => discard all properties ! TODO make this clear
 
-    assert(g.node_properties().has("level"));
+    PDPC_DEBUG_ASSERT(g.node_properties().has("level"));
     int prop_level = g.node_properties().index("level");
 
     // nodes -------------------------------------------------------------------
@@ -266,7 +266,7 @@ HierarchicalGraph& HierarchicalGraph::from_graph(const Graph& g, bool add_prop)
 //            std::swap(source(level, e), target(level, e));
     }
 
-    assert(edge_begin_vec.size() == node_begin_vec.size()-1);
+    PDPC_DEBUG_ASSERT(edge_begin_vec.size() == node_begin_vec.size()-1);
 
     for(int level=0; level<this->level_count(); ++level)
     {
@@ -298,9 +298,9 @@ HierarchicalGraph& HierarchicalGraph::from_graph(const Graph& g, bool add_prop)
         }
     }
 
-    assert(g.node_count() == this->node_count());
-    assert(g.edge_count() == this->edge_count());
-    assert(this->is_consistent());
+    PDPC_DEBUG_ASSERT(g.node_count() == this->node_count());
+    PDPC_DEBUG_ASSERT(g.edge_count() == this->edge_count());
+    PDPC_DEBUG_ASSERT(this->is_consistent());
     return *this;
 }
 
@@ -408,7 +408,7 @@ int HierarchicalGraph::add_edge(int mid_level, const Edge& e)
 
 void HierarchicalGraph::remove_node(int level, int node)
 {
-    assert(contains_node(level, node));
+    PDPC_DEBUG_ASSERT(contains_node(level, node));
 
     isolate(level, node);
 
@@ -436,7 +436,7 @@ void HierarchicalGraph::remove_node(int level, int node)
 
 void HierarchicalGraph::remove_edge(int level, int edge)
 {
-    assert(contains_edge(level, edge));
+    PDPC_DEBUG_ASSERT(contains_edge(level, edge));
 
     edges(level).erase(edges(level).begin()+edge);
     edge_properties(level).erase(edge);
@@ -484,7 +484,7 @@ void HierarchicalGraph::remove_edge(int level, int edge)
 
 void HierarchicalGraph::remove_in_edges(int level, int node)
 {
-    assert(contains_node(level, node));
+    PDPC_DEBUG_ASSERT(contains_node(level, node));
 
     while(!this->node(level, node).in.empty())
         remove_edge(level, this->node(level, node).in.front());
@@ -492,7 +492,7 @@ void HierarchicalGraph::remove_in_edges(int level, int node)
 
 void HierarchicalGraph::remove_out_edges(int level, int node)
 {
-    assert(contains_node(level, node));
+    PDPC_DEBUG_ASSERT(contains_node(level, node));
 
     while(!this->node(level, node).out.empty())
         remove_edge(level-1, this->node(level, node).out.front());
@@ -500,17 +500,17 @@ void HierarchicalGraph::remove_out_edges(int level, int node)
 
 void HierarchicalGraph::isolate(int level, int node)
 {
-    assert(contains_node(level, node));
+    PDPC_DEBUG_ASSERT(contains_node(level, node));
 
     remove_in_edges(level, node);
     remove_out_edges(level, node);
-    assert(this->is_isolated(level, node));
+    PDPC_DEBUG_ASSERT(this->is_isolated(level, node));
 }
 
 void HierarchicalGraph::swap_node(int level, int node1, int node2)
 {
-    assert(contains_node(level, node1));
-    assert(contains_node(level, node2));
+    PDPC_DEBUG_ASSERT(contains_node(level, node1));
+    PDPC_DEBUG_ASSERT(contains_node(level, node2));
 
     if(node1 == node2) return;
 

@@ -119,7 +119,7 @@ int property_map::add(const String& name)
     else
     {
         int idx = it->second;
-        assert(m_vectors.at(idx)->is<T>());
+        PDPC_DEBUG_ASSERT(m_vectors.at(idx)->is<T>());
         return idx;
     }
 }

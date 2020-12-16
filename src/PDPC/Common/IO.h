@@ -1,6 +1,7 @@
 #pragma once
 
 #include <PDPC/Common/Log.h>
+#include <PDPC/Common/Assert.h>
 
 #include <Eigen/Core>
 
@@ -151,7 +152,7 @@ std::istream& IO::read_value(std::istream& is, std::string& val)
 {
     int size = -1;
     is.read(reinterpret_cast<char*>(&size), sizeof(int));
-    assert(size >= 0);
+    PDPC_DEBUG_ASSERT(size >= 0);
     val.resize(size);
     is.read(&val[0], size * sizeof(char));
     return is;
@@ -176,23 +177,23 @@ std::string IO::to_string(const std::string& value)
     return value;
 }
 
-std::string IO::to_string(const Eigen::Vector2i&) {assert(false); return "";}
-std::string IO::to_string(const Eigen::Vector3i&) {assert(false); return "";}
-std::string IO::to_string(const Eigen::Vector4i&) {assert(false); return "";}
-std::string IO::to_string(const Eigen::Matrix<uint,2,1>&) {assert(false); return "";}
-std::string IO::to_string(const Eigen::Matrix<uint,3,1>&) {assert(false); return "";}
-std::string IO::to_string(const Eigen::Matrix<uint,4,1>&) {assert(false); return "";}
-std::string IO::to_string(const Eigen::Vector2f&) {assert(false); return "";}
-std::string IO::to_string(const Eigen::Vector3f&) {assert(false); return "";}
-std::string IO::to_string(const Eigen::Vector4f&) {assert(false); return "";}
-std::string IO::to_string(const Eigen::Vector2d&) {assert(false); return "";}
-std::string IO::to_string(const Eigen::Vector3d&) {assert(false); return "";}
-std::string IO::to_string(const Eigen::Vector4d&) {assert(false); return "";}
+std::string IO::to_string(const Eigen::Vector2i&) {PDPC_DEBUG_ASSERT(false); return "";}
+std::string IO::to_string(const Eigen::Vector3i&) {PDPC_DEBUG_ASSERT(false); return "";}
+std::string IO::to_string(const Eigen::Vector4i&) {PDPC_DEBUG_ASSERT(false); return "";}
+std::string IO::to_string(const Eigen::Matrix<uint,2,1>&) {PDPC_DEBUG_ASSERT(false); return "";}
+std::string IO::to_string(const Eigen::Matrix<uint,3,1>&) {PDPC_DEBUG_ASSERT(false); return "";}
+std::string IO::to_string(const Eigen::Matrix<uint,4,1>&) {PDPC_DEBUG_ASSERT(false); return "";}
+std::string IO::to_string(const Eigen::Vector2f&) {PDPC_DEBUG_ASSERT(false); return "";}
+std::string IO::to_string(const Eigen::Vector3f&) {PDPC_DEBUG_ASSERT(false); return "";}
+std::string IO::to_string(const Eigen::Vector4f&) {PDPC_DEBUG_ASSERT(false); return "";}
+std::string IO::to_string(const Eigen::Vector2d&) {PDPC_DEBUG_ASSERT(false); return "";}
+std::string IO::to_string(const Eigen::Vector3d&) {PDPC_DEBUG_ASSERT(false); return "";}
+std::string IO::to_string(const Eigen::Vector4d&) {PDPC_DEBUG_ASSERT(false); return "";}
 
 template<typename T>
 void IO::from_string(T& value, const std::string& str)
 {
-    assert(false);
+    PDPC_DEBUG_ASSERT(false);
     (void)(value);
     (void)(str);
 }

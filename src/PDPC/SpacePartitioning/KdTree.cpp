@@ -46,13 +46,13 @@ bool KdTree::valid() const
 
     if(m_nodes == nullptr || m_indices == nullptr)
     {
-        assert(false);
+        PDPC_DEBUG_ASSERT(false);
         return false;
     }
 
     if(m_points->size() < m_indices->size())
     {
-        assert(false);
+        PDPC_DEBUG_ASSERT(false);
         return false;
     }
 
@@ -61,7 +61,7 @@ bool KdTree::valid() const
     {
         if(idx < 0 || int(m_points->size()) <= idx || b[idx])
         {
-            assert(false);
+            PDPC_DEBUG_ASSERT(false);
             return false;
         }
         b[idx] = true;
@@ -74,7 +74,7 @@ bool KdTree::valid() const
         {
             if(m_indices->size() <= node.start || m_indices->size() < node.start+node.size)
             {
-                assert(false);
+                PDPC_DEBUG_ASSERT(false);
                 return false;
             }
         }
@@ -82,12 +82,12 @@ bool KdTree::valid() const
         {
             if(node.dim < 0 || 2 < node.dim)
             {
-                assert(false);
+                PDPC_DEBUG_ASSERT(false);
                 return false;
             }
             if(m_nodes->size() <= node.firstChildId || m_nodes->size() <= node.firstChildId+1u)
             {
-                assert(false);
+                PDPC_DEBUG_ASSERT(false);
                 return false;
             }
         }
@@ -139,7 +139,7 @@ void KdTree::build(std::shared_ptr<Vector3Array>& points)
 
     this->build_rec(0, 0, m_points->size(), 1);
 
-    assert(this->valid());
+    PDPC_DEBUG_ASSERT(this->valid());
 }
 
 void KdTree::build(std::shared_ptr<Vector3Array>& points, const std::vector<int>& sampling)
@@ -157,12 +157,12 @@ void KdTree::build(std::shared_ptr<Vector3Array>& points, const std::vector<int>
 
     this->build_rec(0, 0, m_indices->size(), 1);
 
-    assert(this->valid());
+    PDPC_DEBUG_ASSERT(this->valid());
 }
 
 void KdTree::rebuild(const std::vector<int>& sampling)
 {
-    assert(sampling.size() <= m_points->size());
+    PDPC_DEBUG_ASSERT(sampling.size() <= m_points->size());
 
     m_nodes->clear();
     m_nodes->emplace_back();
@@ -172,7 +172,7 @@ void KdTree::rebuild(const std::vector<int>& sampling)
 
     this->build_rec(0, 0, m_indices->size(), 1);
 
-    assert(this->valid());
+    PDPC_DEBUG_ASSERT(this->valid());
 }
 
 // Query -----------------------------------------------------------------------

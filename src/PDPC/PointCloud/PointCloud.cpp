@@ -429,13 +429,13 @@ Vector3& PointCloud::operator[](int i)
 
 const Vector3& PointCloud::point(int i) const
 {
-    assert(0 <= i && i < size());
+    PDPC_DEBUG_ASSERT(0 <= i && i < size());
     return points_data()[i];
 }
 
 Vector3& PointCloud::point(int i)
 {
-    assert(0 <= i && i < size());
+    PDPC_DEBUG_ASSERT(0 <= i && i < size());
     return points_data()[i];
 }
 
@@ -451,49 +451,49 @@ Vector3& PointCloud::vertex(int i)
 
 const Vector3& PointCloud::normal(int i) const
 {
-    assert(0 <= i && i < size());
+    PDPC_DEBUG_ASSERT(0 <= i && i < size());
     return normals_data()[i];
 }
 
 Vector3& PointCloud::normal(int i)
 {
-    assert(0 <= i && i < size());
+    PDPC_DEBUG_ASSERT(0 <= i && i < size());
     return normals_data()[i];
 }
 
 const Vector4& PointCloud::color(int i) const
 {
-    assert(0 <= i && i < size());
+    PDPC_DEBUG_ASSERT(0 <= i && i < size());
     return colors_data()[i];
 }
 
 Vector4& PointCloud::color(int i)
 {
-    assert(0 <= i && i < size());
+    PDPC_DEBUG_ASSERT(0 <= i && i < size());
     return colors_data()[i];
 }
 
 const Vector2& PointCloud::uv(int i) const
 {
-    assert(0 <= i && i < size());
+    PDPC_DEBUG_ASSERT(0 <= i && i < size());
     return uv_data()[i];
 }
 
 Vector2& PointCloud::uv(int i)
 {
-    assert(0 <= i && i < size());
+    PDPC_DEBUG_ASSERT(0 <= i && i < size());
     return uv_data()[i];
 }
 
 const Vector3i& PointCloud::face(int j) const
 {
-    assert(0 <= j && j < face_count());
+    PDPC_DEBUG_ASSERT(0 <= j && j < face_count());
     return faces_data()[j];
 }
 
 Vector3i& PointCloud::face(int j)
 {
-    assert(0 <= j && j < face_count());
+    PDPC_DEBUG_ASSERT(0 <= j && j < face_count());
     return faces_data()[j];
 }
 
@@ -858,19 +858,19 @@ Vector3Array& PointCloud::vertices_data()
 
 Vector3Array& PointCloud::normals_data()
 {
-    assert(has_normals());
+    PDPC_DEBUG_ASSERT(has_normals());
     return *m_normals;
 }
 
 Vector4Array& PointCloud::colors_data()
 {
-    assert(has_colors());
+    PDPC_DEBUG_ASSERT(has_colors());
     return *m_colors;
 }
 
 Vector2Array& PointCloud::uv_data()
 {
-    assert(has_uv());
+    PDPC_DEBUG_ASSERT(has_uv());
     return *m_uv;
 }
 
@@ -891,19 +891,19 @@ const Vector3Array& PointCloud::vertices_data() const
 
 const Vector3Array& PointCloud::normals_data() const
 {
-    assert(has_normals());
+    PDPC_DEBUG_ASSERT(has_normals());
     return *m_normals;
 }
 
 const Vector4Array& PointCloud::colors_data() const
 {
-    assert(has_colors());
+    PDPC_DEBUG_ASSERT(has_colors());
     return *m_colors;
 }
 
 const Vector2Array& PointCloud::uv_data() const
 {
-    assert(has_uv());
+    PDPC_DEBUG_ASSERT(has_uv());
     return *m_uv;
 }
 
@@ -978,25 +978,25 @@ const std::shared_ptr<Vector3iArray>& PointCloud::faces_ptr() const
 
 const KdTree& PointCloud::kdtree() const
 {
-    assert(has_kdtree());
+    PDPC_DEBUG_ASSERT(has_kdtree());
     return *m_kdtree.get();
 }
 
 KdTree& PointCloud::kdtree()
 {
-    assert(has_kdtree());
+    PDPC_DEBUG_ASSERT(has_kdtree());
     return *m_kdtree.get();
 }
 
 const KnnGraph& PointCloud::knn_graph() const
 {
-    assert(has_knn_graph());
+    PDPC_DEBUG_ASSERT(has_knn_graph());
     return *m_knngraph.get();
 }
 
 KnnGraph& PointCloud::knn_graph()
 {
-    assert(has_knn_graph());
+    PDPC_DEBUG_ASSERT(has_knn_graph());
     return *m_knngraph.get();
 }
 

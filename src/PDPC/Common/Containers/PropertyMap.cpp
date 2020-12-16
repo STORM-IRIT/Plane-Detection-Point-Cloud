@@ -169,12 +169,12 @@ bool property_map::_is_valid() const
 {
     if(m_mapID.size() != m_vecID.size())
     {
-        assert(false);
+        PDPC_DEBUG_ASSERT(false);
         return false;
     }
     if(m_mapID.size() != poly_vector::m_vectors.size())
     {
-        assert(false);
+        PDPC_DEBUG_ASSERT(false);
         return false;
     }
     for(int i=0; i<int(m_vecID.size()); ++i)
@@ -182,12 +182,12 @@ bool property_map::_is_valid() const
         auto it = m_mapID.find(m_vecID[i]);
         if(it == m_mapID.end())
         {
-            assert(false);
+            PDPC_DEBUG_ASSERT(false);
             return false;
         }
         if(it->second != i)
         {
-            assert(false);
+            PDPC_DEBUG_ASSERT(false);
             return false;
         }
     }
@@ -195,12 +195,12 @@ bool property_map::_is_valid() const
     {
         if(it.second >= int(m_vecID.size()))
         {
-            assert(false);
+            PDPC_DEBUG_ASSERT(false);
             return false;
         }
         if(m_vecID[it.second] != it.first)
         {
-            assert(false);
+            PDPC_DEBUG_ASSERT(false);
             return false;
         }
     }

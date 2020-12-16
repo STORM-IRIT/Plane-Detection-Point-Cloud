@@ -1,5 +1,6 @@
 #include <PDPC/SpacePartitioning/KnnGraph/Query/KnnGraphRangeQuery.h>
 #include <PDPC/SpacePartitioning/KnnGraph.h>
+#include <PDPC/Common/Assert.h>
 
 namespace pdpc {
 
@@ -53,7 +54,7 @@ void KnnGraphRangeQuery::initialize(KnnGraphRangeIterator& iterator)
     m_flag.resize(m_graph->size());
     std::fill(m_flag.begin(), m_flag.end(), false);
 
-    assert(m_stack.empty());
+    PDPC_DEBUG_ASSERT(m_stack.empty());
     m_stack.push(m_index);
     m_flag[m_index] = true;
 
@@ -74,7 +75,7 @@ void KnnGraphRangeQuery::advance(KnnGraphRangeIterator& iterator)
         int idx_current = m_stack.top();
         m_stack.pop();
 
-        assert((point - points[idx_current]).squaredNorm() < m_squared_radius);
+        PDPC_DEBUG_ASSERT((point - points[idx_current]).squaredNorm() < m_squared_radius);
 
         iterator.m_index = idx_current;
 

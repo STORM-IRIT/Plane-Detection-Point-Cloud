@@ -1,6 +1,6 @@
 #pragma once
 
-#include <cassert>
+#include <PDPC/Common/Assert.h>
 
 namespace pdpc {
 
@@ -41,14 +41,14 @@ static_stack<T,N>::static_stack() :
 template<class T, int N>
 const T& static_stack<T,N>::top() const
 {
-    assert(!empty());
+    PDPC_DEBUG_ASSERT(!empty());
     return m_data[m_size-1];
 }
 
 template<class T, int N>
 T& static_stack<T,N>::top()
 {
-    assert(!empty());
+    PDPC_DEBUG_ASSERT(!empty());
     return m_data[m_size-1];
 }
 
@@ -73,7 +73,7 @@ int static_stack<T,N>::size() const
 template<class T, int N>
 void static_stack<T,N>::push(const T& value)
 {
-    assert(!full());
+    PDPC_DEBUG_ASSERT(!full());
     m_data[m_size] = value;
     ++m_size;
 }
@@ -81,7 +81,7 @@ void static_stack<T,N>::push(const T& value)
 template<class T, int N>
 void static_stack<T,N>::push()
 {
-    assert(!full());
+    PDPC_DEBUG_ASSERT(!full());
     m_data[m_size] = T();
     ++m_size;
 }
@@ -89,7 +89,7 @@ void static_stack<T,N>::push()
 template<class T, int N>
 void static_stack<T,N>::pop()
 {
-    assert(!empty());
+    PDPC_DEBUG_ASSERT(!empty());
     --m_size;
 }
 

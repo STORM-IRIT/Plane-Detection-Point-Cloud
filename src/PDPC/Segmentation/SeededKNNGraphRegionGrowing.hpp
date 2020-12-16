@@ -10,7 +10,7 @@ void SeededKNNGraphRegionGrowing::compute(const PointCloud& point_cloud,
                                           InitFuncT&& init_f,
                                           bool verbose)
 {
-    assert(point_cloud.has_knn_graph());
+    PDPC_DEBUG_ASSERT(point_cloud.has_knn_graph());
 
     // init segmentation
     const int size = point_cloud.size();

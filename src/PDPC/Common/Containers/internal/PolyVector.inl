@@ -214,13 +214,13 @@ int poly_vector::add(IO::TypeID type)
 template<typename T, class A>
 void poly_vector::discard(int idx)
 {
-    assert((this->has<T,A>(idx)));
+    PDPC_DEBUG_ASSERT((this->has<T,A>(idx)));
     m_vectors[idx].reset(nullptr);
 }
 
 void poly_vector::discard(int idx)
 {
-    assert((this->has(idx)));
+    PDPC_DEBUG_ASSERT((this->has(idx)));
     m_vectors[idx].reset(nullptr);
 }
 
@@ -234,14 +234,14 @@ void poly_vector::discard_all()
 template<typename T, class A>
 const T& poly_vector::at(int idx, int n) const
 {
-    assert(0 <= n && n < int(this->at<T,A>(idx).size()));
+    PDPC_DEBUG_ASSERT(0 <= n && n < int(this->at<T,A>(idx).size()));
     return this->at<T,A>(idx)[n];
 }
 
 template<typename T, class A>
 T& poly_vector::at(int idx, int n)
 {
-    assert(0 <= n && n < int(this->at<T,A>(idx).size()));
+    PDPC_DEBUG_ASSERT(0 <= n && n < int(this->at<T,A>(idx).size()));
     return this->at<T,A>(idx)[n];
 }
 
@@ -271,7 +271,7 @@ std::shared_ptr<std::vector<T,A>>& poly_vector::ptr(int idx)
 
 const abstract_vector* poly_vector::at(int idx) const
 {
-    assert(0 <= idx && idx < int(m_vectors.size()));
+    PDPC_DEBUG_ASSERT(0 <= idx && idx < int(m_vectors.size()));
     return m_vectors[idx].get();
 }
 
@@ -288,26 +288,26 @@ bool poly_vector::has(int idx) const
 template<typename T, class A>
 const concrete_vector<T,A>& poly_vector::get(int idx) const
 {
-    assert((this->has<T,A>(idx)));
+    PDPC_DEBUG_ASSERT((this->has<T,A>(idx)));
     return m_vectors[idx]->cast<T,A>();
 }
 
 template<typename T, class A>
 concrete_vector<T,A>& poly_vector::get(int idx)
 {
-    assert((this->has<T,A>(idx)));
+    PDPC_DEBUG_ASSERT((this->has<T,A>(idx)));
     return m_vectors[idx]->cast<T,A>();
 }
 
 const abstract_vector* poly_vector::operator [](int idx) const
 {
-    assert((this->has(idx)));
+    PDPC_DEBUG_ASSERT((this->has(idx)));
     return m_vectors[idx].get();
 }
 
 abstract_vector* poly_vector::operator [](int idx)
 {
-    assert((this->has(idx)));
+    PDPC_DEBUG_ASSERT((this->has(idx)));
     return m_vectors[idx].get();
 }
 

@@ -15,14 +15,14 @@ const T& abstract_vector_view<true>::value() const
 template<class T, class A>
 concrete_vector_view<true,T,A>& abstract_vector_view<true>::cast()
 {
-    assert((this->is<true,T,A>()));
+    PDPC_DEBUG_ASSERT((this->is<true,T,A>()));
     return static_cast<concrete_vector_view<true,T,A>&>(*this);
 }
 
 template<class T, class A>
 const concrete_vector_view<true,T,A>& abstract_vector_view<true>::cast() const
 {
-    assert((this->is<true,T,A>()));
+    PDPC_DEBUG_ASSERT((this->is<true,T,A>()));
     return static_cast<const concrete_vector_view<true,T,A>&>(*this);
 }
 
@@ -53,14 +53,14 @@ T& abstract_vector_view<false>::value()
 template<class T, class A>
 concrete_vector_view<false,T,A>& abstract_vector_view<false>::cast()
 {
-    assert((this->is<false,T,A>()));
+    PDPC_DEBUG_ASSERT((this->is<false,T,A>()));
     return static_cast<concrete_vector_view<false,T,A>&>(*this);
 }
 
 template<class T, class A>
 const concrete_vector_view<false,T,A>& abstract_vector_view<false>::cast() const
 {
-    assert((this->is<false,T,A>()));
+    PDPC_DEBUG_ASSERT((this->is<false,T,A>()));
     return static_cast<const concrete_vector_view<false,T,A>&>(*this);
 }
 
@@ -114,7 +114,7 @@ template<bool is_const>
 template<typename T, class A>
 concrete_vector_iterator<is_const,T,A>& abstract_vector_iterator<is_const>::cast()
 {
-    assert((this->is<T,A>()));
+    PDPC_DEBUG_ASSERT((this->is<T,A>()));
     return static_cast<concrete_vector_iterator<is_const,T,A>&>(*this);
 }
 
@@ -122,7 +122,7 @@ template<bool is_const>
 template<typename T, class A>
 const concrete_vector_iterator<is_const,T,A>& abstract_vector_iterator<is_const>::cast() const
 {
-    assert((this->is<T,A>()));
+    PDPC_DEBUG_ASSERT((this->is<T,A>()));
     return static_cast<const concrete_vector_iterator<is_const,T,A>&>(*this);
 }
 
@@ -346,7 +346,7 @@ abstract_vector* abstract_vector::create(IO::TypeID type, int size)
 {
     switch(type)
     {
-        case IO::ID_BOOL           : assert(false); return nullptr; // "bool not yet supported"
+        case IO::ID_BOOL           : PDPC_DEBUG_ASSERT(false); return nullptr; // "bool not yet supported"
         case IO::ID_INT            : return new concrete_vector<int>(size);
         case IO::ID_UINT           : return new concrete_vector<uint>(size);
         case IO::ID_FLOAT          : return new concrete_vector<float>(size);
@@ -385,14 +385,14 @@ abstract_vector::index_iterator abstract_vector::index_end() const
 template<class T, class A>
 concrete_vector<T,A>& abstract_vector::cast()
 {
-    assert((this->is<T,A>()));
+    PDPC_DEBUG_ASSERT((this->is<T,A>()));
     return static_cast<concrete_vector<T,A>&>(*this);
 }
 
 template<class T, class A>
 const concrete_vector<T,A>& abstract_vector::cast() const
 {
-    assert((this->is<T,A>()));
+    PDPC_DEBUG_ASSERT((this->is<T,A>()));
     return static_cast<const concrete_vector<T,A>&>(*this);
 }
 

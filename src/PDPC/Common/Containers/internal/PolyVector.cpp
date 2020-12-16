@@ -294,8 +294,8 @@ void poly_vector::clear()
 
 void poly_vector::insert(const iterator& pos, const const_iterator& first, const const_iterator& last)
 {
-    assert(pos.match(first));
-    assert(pos.match(last));
+    PDPC_DEBUG_ASSERT(pos.match(first));
+    PDPC_DEBUG_ASSERT(pos.match(last));
 
     int idx = 0;
     for(auto& v : m_vectors)
@@ -418,7 +418,7 @@ bool poly_vector::_is_valid() const
         {
             if(v->size() != m_size)
             {
-                assert(false);
+                PDPC_DEBUG_ASSERT(false);
                 return false;
             }
         }

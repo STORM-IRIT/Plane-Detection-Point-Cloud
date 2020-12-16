@@ -27,7 +27,7 @@ inline void keep(const std::vector<T,A>& vec, std::vector<T,A>& res, const std::
 template<typename T, class A>
 void erase(std::vector<T,A>& vec, const std::vector<bool>& to_erase)
 {
-    assert(vec.size() == to_erase.size());
+    PDPC_DEBUG_ASSERT(vec.size() == to_erase.size());
 
     const size_t size = vec.size();
 
@@ -50,7 +50,7 @@ void erase(std::vector<T,A>& vec, const std::vector<bool>& to_erase)
 template<typename T, class A>
 void keep(std::vector<T,A>& vec, const std::vector<bool>& to_keep)
 {
-    assert(vec.size() == to_keep.size());
+    PDPC_DEBUG_ASSERT(vec.size() == to_keep.size());
 
     const size_t size = vec.size();
 
@@ -69,8 +69,8 @@ void keep(std::vector<T,A>& vec, const std::vector<bool>& to_keep)
 template<typename T, class A>
 void keep(std::vector<T,A>& vec, const std::vector<int>& to_keep)
 {
-    assert(to_keep.size() <= vec.size());
-    assert(std::is_sorted(to_keep.begin(), to_keep.end()));
+    PDPC_DEBUG_ASSERT(to_keep.size() <= vec.size());
+    PDPC_DEBUG_ASSERT(std::is_sorted(to_keep.begin(), to_keep.end()));
 
     for(size_t i = 0; i < to_keep.size(); ++i)
     {
@@ -83,8 +83,8 @@ void keep(std::vector<T,A>& vec, const std::vector<int>& to_keep)
 template<typename T, class A>
 void keep(const std::vector<T,A>& vec, std::vector<T,A>& res, const std::vector<int>& to_keep)
 {
-    assert(to_keep.size() <= vec.size());
-    assert(std::is_sorted(to_keep.begin(), to_keep.end()));
+    PDPC_DEBUG_ASSERT(to_keep.size() <= vec.size());
+    PDPC_DEBUG_ASSERT(std::is_sorted(to_keep.begin(), to_keep.end()));
 
     res.resize(to_keep.size());
     for(size_t i = 0; i < to_keep.size(); ++i)
@@ -96,7 +96,7 @@ void keep(const std::vector<T,A>& vec, std::vector<T,A>& res, const std::vector<
 template<typename T, class A>
 void keep(const std::vector<T,A>& vec, std::vector<T,A>& res, const std::vector<bool>& to_keep)
 {
-    assert(vec.size() == to_keep.size());
+    PDPC_DEBUG_ASSERT(vec.size() == to_keep.size());
 
     const size_t size = vec.size();
     const size_t new_size = std::count(to_keep.begin(), to_keep.end(), true);

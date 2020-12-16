@@ -1,4 +1,5 @@
 #include <PDPC/Graph/Graph.h>
+#include <PDPC/Common/Assert.h>
 
 #include <random>
 
@@ -35,12 +36,12 @@ bool Graph::is_consistent() const
     // check property size
     if(node_properties().size() != node_count() )
     {
-        assert(false);
+        PDPC_DEBUG_ASSERT(false);
         return false;
     }
     if(edge_properties().size() != edge_count() )
     {
-        assert(false);
+        PDPC_DEBUG_ASSERT(false);
         return false;
     }
 
@@ -52,7 +53,7 @@ bool Graph::is_consistent() const
         {
             if(target(edge) != node)
             {
-                assert(false);
+                PDPC_DEBUG_ASSERT(false);
                 return false;
             }
         }
@@ -60,7 +61,7 @@ bool Graph::is_consistent() const
         {
             if(source(edge) != node)
             {
-                assert(false);
+                PDPC_DEBUG_ASSERT(false);
                 return false;
             }
         }
@@ -75,7 +76,7 @@ bool Graph::is_consistent() const
                                edge);
         if(itOut == node(e.source).out.end())
         {
-            assert(false);
+            PDPC_DEBUG_ASSERT(false);
             return false;
         }
         auto itIn = std::find(node(e.target).in.begin(),
@@ -83,7 +84,7 @@ bool Graph::is_consistent() const
                               edge);
         if(itIn == node(e.target).out.end())
         {
-            assert(false);
+            PDPC_DEBUG_ASSERT(false);
             return false;
         }
     }
@@ -160,8 +161,8 @@ int Graph::add_edge(int source, int target)
 
 int Graph::add_edge(const Edge& e)
 {
-    assert(this->contains_node(e.source));
-    assert(this->contains_node(e.target));
+    PDPC_DEBUG_ASSERT(this->contains_node(e.source));
+    PDPC_DEBUG_ASSERT(this->contains_node(e.target));
     edges().emplace_back(e);
     edge_properties().emplace_back();
     int edge = edge_count()-1;
@@ -176,13 +177,13 @@ void Graph::remove_node(int node)
 
     for(Edge& e : edges())
     {
-        assert(e.source!=node);
-        assert(e.target!=node);
+        PDPC_DEBUG_ASSERT(e.source!=node);
+        PDPC_DEBUG_ASSERT(e.target!=node);
         if(e.source > node) --e.source;
         if(e.target > node) --e.target;
     }
     nodes().erase(nodes().begin()+node);
-    assert(false); //TODO
+    PDPC_DEBUG_ASSERT(false); //TODO
 //    node_properties().erase(node);
 }
 
@@ -224,7 +225,7 @@ void Graph::remove_edge(int edge)
             }
         }
     }
-    assert(false); //TODO
+    PDPC_DEBUG_ASSERT(false); //TODO
 //    edge_properties().erase(edge);
 }
 
@@ -245,7 +246,7 @@ void Graph::isolate(int node)
 {
     remove_in_edges(node);
     remove_out_edges(node);
-    assert(this->is_isolated(node));
+    PDPC_DEBUG_ASSERT(this->is_isolated(node));
 }
 
 void Graph::set_random(int node_count)

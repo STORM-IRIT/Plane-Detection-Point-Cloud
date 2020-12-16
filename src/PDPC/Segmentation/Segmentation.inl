@@ -33,13 +33,13 @@ int Segmentation::size(int l) const
 
 int Segmentation::label(int idx) const
 {
-    assert(0 <= idx && idx < size());
+    PDPC_DEBUG_ASSERT(0 <= idx && idx < size());
     return m_labels[idx];
 }
 
 int Segmentation::operator [](int idx) const
 {
-    assert(0 <= idx && idx < size());
+    PDPC_DEBUG_ASSERT(0 <= idx && idx < size());
     return m_labels[idx];
 }
 

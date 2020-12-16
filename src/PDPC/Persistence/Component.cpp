@@ -1,6 +1,5 @@
 #include <PDPC/Persistence/Component.h>
-
-#include <cassert>
+#include <PDPC/Common/Assert.h>
 
 namespace pdpc {
 
@@ -28,12 +27,12 @@ bool Component::is_valid() const
 {
     if(m_birth_level < 0)
     {
-        assert(false);
+        PDPC_DEBUG_ASSERT(false);
         return false;
     }
     if(m_indices.empty() && m_birth_level > 0)
     {
-        assert(false);
+        PDPC_DEBUG_ASSERT(false);
         return false;
     }
     return true;
@@ -43,7 +42,7 @@ bool Component::is_valid() const
 
 std::ostream& Component::write(std::ostream& os) const
 {
-    assert(this->is_valid());
+    PDPC_DEBUG_ASSERT(this->is_valid());
 
     const int size = this->size();
     os.write(reinterpret_cast<const char*>(&size), sizeof(int));
@@ -58,8 +57,8 @@ std::istream& Component::read(std::istream& is)
     is.read(reinterpret_cast<char*>(&size), sizeof(int));
     is.read(reinterpret_cast<char*>(&m_birth_level), sizeof(int));
 
-    assert(size >= 0);
-    assert(m_birth_level >= 0);
+    PDPC_DEBUG_ASSERT(size >= 0);
+    PDPC_DEBUG_ASSERT(m_birth_level >= 0);
     m_indices.resize(size);
 
     is.read(reinterpret_cast<char*>(m_indices.data()), size*sizeof(int));
@@ -105,13 +104,13 @@ int Component::operator[] (int level) const
 
 int Component::level_at(int i) const
 {
-    assert(i < this->size());
+    PDPC_DEBUG_ASSERT(i < this->size());
     return m_birth_level + i;
 }
 
 int Component::index_at(int i) const
 {
-    assert(i < this->size());
+    PDPC_DEBUG_ASSERT(i < this->size());
     return m_indices[i];
 }
 
@@ -149,13 +148,13 @@ void Component::reserve(int cap)
 
 int Component::index_at_level(int level) const
 {
-    assert(this->birth_level() <= level && level <= this->death_level());
+    PDPC_DEBUG_ASSERT(this->birth_level() <= level && level <= this->death_level());
     return m_indices[level - m_birth_level];
 }
 
 int& Component::index_at_level(int level)
 {
-    assert(this->birth_level() <= level && level <= this->death_level());
+    PDPC_DEBUG_ASSERT(this->birth_level() <= level && level <= this->death_level());
     return m_indices[level - m_birth_level];
 }
 

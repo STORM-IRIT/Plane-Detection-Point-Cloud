@@ -1,5 +1,6 @@
 #include <PDPC/ScaleSpace/ScaleSampling.h>
 #include <PDPC/Common/Log.h>
+#include <PDPC/Common/Assert.h>
 
 #include <cmath>
 #include <fstream>
@@ -24,7 +25,7 @@ bool ScaleSampling::is_valid() const
     {
         if(m_scales[i+1] < m_scales[i])
         {
-            assert(false);
+            PDPC_DEBUG_ASSERT(false);
             return false;
         }
     }
@@ -36,7 +37,7 @@ bool ScaleSampling::is_valid() const
 
 std::ostream& ScaleSampling::write(std::ostream& os) const
 {
-    assert(this->is_valid());
+    PDPC_DEBUG_ASSERT(this->is_valid());
     int size = m_scales.size();
     os.write(reinterpret_cast<char*>(&size), sizeof(int));
     os.write(reinterpret_cast<const char*>(m_scales.data()), size*sizeof(Scalar));
@@ -49,7 +50,7 @@ std::istream& ScaleSampling::read(std::istream& is)
     is.read(reinterpret_cast<char*>(&size), sizeof(int));
     m_scales.resize(size);
     is.read(reinterpret_cast<char*>(m_scales.data()), size*sizeof(Scalar));
-    assert(this->is_valid());
+    PDPC_DEBUG_ASSERT(this->is_valid());
     return is;
 }
 
@@ -119,14 +120,14 @@ void ScaleSampling::sample(Scalar min, Scalar max, int count, Scalar base)
             m_scales[i] = min + delta0*(1.-std::pow(base, i)) / (1.-base);
         }
     }
-    assert(this->is_valid());
+    PDPC_DEBUG_ASSERT(this->is_valid());
 }
 
 Scalar ScaleSampling::log_sample(Scalar scale_min, Scalar scale_max, int scale_count)
 {
-    assert(Scalar(0) < scale_min);
-    assert(scale_min < scale_max);
-    assert(0 < scale_count);
+    PDPC_DEBUG_ASSERT(Scalar(0) < scale_min);
+    PDPC_DEBUG_ASSERT(scale_min < scale_max);
+    PDPC_DEBUG_ASSERT(0 < scale_count);
 
     m_scales.resize(scale_count);
 
@@ -144,7 +145,7 @@ Scalar ScaleSampling::log_sample(Scalar scale_min, Scalar scale_max, int scale_c
             m_scales[n] = std::pow(alpha, n) * scale_min;
         }
 
-        assert(this->is_valid());
+        PDPC_DEBUG_ASSERT(this->is_valid());
         return alpha;
     }
 }

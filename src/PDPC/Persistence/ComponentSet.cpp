@@ -20,7 +20,7 @@ bool ComponentSet::is_valid() const
 {
     if(int(m_components.size()) != m_properties.size())
     {
-        assert(false);
+        PDPC_DEBUG_ASSERT(false);
         return false;
     }
 
@@ -28,7 +28,7 @@ bool ComponentSet::is_valid() const
     {
         if(!m_components[i].is_valid())
         {
-            assert(false);
+            PDPC_DEBUG_ASSERT(false);
             return false;
         }
     }
@@ -39,7 +39,7 @@ bool ComponentSet::is_valid() const
 
 std::ostream& ComponentSet::write(std::ostream& os) const
 {
-    assert(this->is_valid());
+    PDPC_DEBUG_ASSERT(this->is_valid());
 
     const int size = this->size();
     os.write(reinterpret_cast<const char*>(&size), sizeof(int));
@@ -58,7 +58,7 @@ std::istream& ComponentSet::read(std::istream& is)
     int size = -1;
     is.read(reinterpret_cast<char*>(&size), sizeof(int));
 
-    assert(size >= 0);
+    PDPC_DEBUG_ASSERT(size >= 0);
 
     m_components.resize(size);
     for(int i=0; i<size; ++i)
@@ -67,7 +67,7 @@ std::istream& ComponentSet::read(std::istream& is)
     }
     m_properties.read(is);
 
-    assert(this->is_valid());
+    PDPC_DEBUG_ASSERT(this->is_valid());
     return is;
 }
 
@@ -86,13 +86,13 @@ bool ComponentSet::empty() const
 
 const Component& ComponentSet::component(int i) const
 {
-    assert(i < this->size());
+    PDPC_DEBUG_ASSERT(i < this->size());
     return m_components[i];
 }
 
 Component& ComponentSet::component(int i)
 {
-    assert(i < this->size());
+    PDPC_DEBUG_ASSERT(i < this->size());
     return m_components[i];
 }
 

@@ -583,25 +583,25 @@ int HierarchicalGraph::get_or_add_edge(int mid_level, int source, int target)
 
 const Edge& HierarchicalGraph::edge(int mid_level, int edge) const
 {
-    assert(contains_edge(mid_level, edge));
+    PDPC_DEBUG_ASSERT(contains_edge(mid_level, edge));
     return edges(mid_level)[edge];
 }
 
 Edge& HierarchicalGraph::edge(int mid_level, int edge)
 {
-    assert(contains_edge(mid_level, edge));
+    PDPC_DEBUG_ASSERT(contains_edge(mid_level, edge));
     return edges(mid_level)[edge];
 }
 
 const typename HierarchicalGraph::EdgeArray& HierarchicalGraph::edges(int mid_level) const
 {
-    assert(mid_level < mid_level_count());
+    PDPC_DEBUG_ASSERT(mid_level < mid_level_count());
     return edges()[mid_level];
 }
 
 typename HierarchicalGraph::EdgeArray& HierarchicalGraph::edges(int mid_level)
 {
-    assert(mid_level < mid_level_count());
+    PDPC_DEBUG_ASSERT(mid_level < mid_level_count());
     return edges()[mid_level];
 }
 
