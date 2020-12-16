@@ -255,15 +255,13 @@ int main(int argc, char **argv)
     }
 
     // 5. Final segmentation ---------------------------------------------------
-    MSSegmentation comp_seg(scale_count);
+    MSSegmentation comp_seg(scale_count, Segmentation(point_count));
     {
         comp_seg.for_each([&](Segmentation& seg)
         {
-            seg.resize(point_count);
-            seg.resize_region(comp_set.size());
+            seg.resize_region(comp_set.size() + 1); // +1 for the empty region
         });
 
-        #pragma omp parallel for
         for(int idx_comp=0; idx_comp<comp_set.size(); ++idx_comp)
         {
             const Component& comp = comp_set[idx_comp];
