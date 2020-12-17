@@ -17,9 +17,18 @@ Abstract Modern acquisition techniques generate detailed point clouds that sampl
 
 ## Getting Started
 
+### Depencencies
+
+The only required dependency is the C++ library [CGAL](https://github.com/CGAL/cgal).  
+To obtain CGAL on Linux use
+```
+sudo apt-get install libcgal-dev
+```   
+Other depencencies like [Eigen](https://gitlab.com/libeigen/eigen) and [Ponca](https://github.com/poncateam/ponca) are directly included in the sources of this project. 
+
 ### Compilation
 
-To compile the code and install the programs in `/usr/local` run the following commands 
+To compile the code and install the programs in `/usr/local/bin` run the following commands  
 ```
 git clone git@github.com:ThibaultLejemble/Plane-Detection-Point-Cloud.git
 cd Plane-Detection-Point-Cloud
@@ -34,21 +43,30 @@ Tested using
 - Debian GNU/Linux 10 (buster)
 - cmake 3.13.4
 - g++ 8.3.0
+- CGAL 5.1
 
 ### Usage
+
+#### Replicate results 
+
+Several scripts available in the [figures](https://github.com/ThibaultLejemble/Plane-Detection-Point-Cloud/tree/main/figures) directory generate some part of the figures presented in the article **Persistence Analysis of Multi-scale Planar Structure Graph in Point Clouds [(PDF)](https://hal.archives-ouvertes.fr/hal-02490721/document)**.
+
+Once the project is compiled and installed (see above), run the following commands from the [figures](https://github.com/ThibaultLejemble/Plane-Detection-Point-Cloud/tree/main/figures) directory
+```
+./generate_fig_05.sh
+./generate_fig_09b.sh
+./generate_fig_09c.sh
+./generate_fig_15b.sh
+```
+The resulting colored point clouds are contained in several PLY `fig_*.ply`. 
+
+#### Process other 3D point clouds
 
 TODO
 
 ## TODO
-- Important
-    - Persistence analysis
-    - scripts to run the pipeline
-    - test data
-- Other
-    - program to compute normals
-    - replace 'simple' proj by 'quasi-orthogonal' proj
-    - use cuda for computing multi-scale features
-    - polygonal reconstruction
-    - project point on planes or colorize them
-    - provides timings
-    - handle txt/xyz files
+- add documentations on the different programs
+- avoid recomputing intermediate data for figures replication
+- improve documentation of the code
+- output txt files for results
+
