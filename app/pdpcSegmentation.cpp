@@ -78,6 +78,18 @@ int main(int argc, char **argv)
                 info().iff(in_v) << j+1 << "/" << scale_count;
             }
 
+            // 1.0 Mean planarity dev ------------------------------------------
+            std::vector<Scalar> mean_planarity_dev(point_count, 0.);
+            for(int i=0; i<point_count; ++i)
+            {
+                mean_planarity_dev[i] = features.plane_dev(i,j);
+                for(int k : points.knn_graph().k_nearest_neighbors(i))
+                {
+                    mean_planarity_dev[i] += features.plane_dev(k,j);
+                }
+                mean_planarity_dev[i] /= (in_k + 1);
+            }
+
             // 1.1 Region growing ----------------------------------------------
             std::vector<int> seeds;
             Segmentation& seg = ms_seg[j];
@@ -92,9 +104,9 @@ int main(int argc, char **argv)
                        features.plane_dev(rg_j,j) < threshold_curva;
             },
             // Priority function for seeds
-            [&features,j](int rg_i, int rg_j) -> bool
+            [&mean_planarity_dev](int rg_i, int rg_j) -> bool
             {
-                return features.plane_dev(rg_i, j) > features.plane_dev(rg_j, j);
+                return mean_planarity_dev[rg_i] > mean_planarity_dev[rg_j];
             },
             // Called for region initialization
             [&seeds](int rg_l, int rg_i)
