@@ -4,6 +4,7 @@
 #include <PDPC/PointCloud/Loader.h>
 #include <PDPC/PointCloud/PointCloud.h>
 #include <PDPC/PointCloud/orthonormal_basis.h>
+#include <PDPC/PointCloud/triangle_area.h>
 #include <PDPC/MultiScaleFeatures/MultiScaleFeatures.h>
 #include <PDPC/ScaleSpace/ScaleSampling.h>
 #include <PDPC/Segmentation/SeededKNNGraphRegionGrowing.h>
@@ -15,7 +16,31 @@
 
 #include <set>
 
+#include <CGAL/Exact_predicates_inexact_constructions_kernel.h>
+#include <CGAL/Alpha_shape_2.h>
+#include <CGAL/Alpha_shape_vertex_base_2.h>
+#include <CGAL/Alpha_shape_face_base_2.h>
+#include <CGAL/Delaunay_triangulation_2.h>
+#include <CGAL/algorithm.h>
+#include <CGAL/assertions.h>
+
+typedef CGAL::Exact_predicates_inexact_constructions_kernel  K;
+typedef K::FT                                                FT;
+typedef K::Point_2                                           CGALPoint;
+typedef K::Segment_2                                         Segment;
+typedef CGAL::Alpha_shape_vertex_base_2<K>                   Vb;
+typedef CGAL::Alpha_shape_face_base_2<K>                     Fb;
+typedef CGAL::Triangulation_data_structure_2<Vb,Fb>          Tds;
+typedef CGAL::Delaunay_triangulation_2<K,Tds>                Triangulation_2;
+typedef CGAL::Alpha_shape_2<Triangulation_2>                 Alpha_shape_2;
+typedef Alpha_shape_2::Alpha_shape_edges_iterator            Alpha_shape_edges_iterator;
+
 using namespace pdpc;
+
+Scalar compute_area(const PointCloud& points,
+                    const std::vector<int>& region,
+                    int i,
+                    Scalar alpha);
 
 int main(int argc, char **argv)
 {
@@ -70,7 +95,7 @@ int main(int argc, char **argv)
 
         points.build_knn_graph(in_k);
 
-//        #pragma omp parallel for
+        #pragma omp parallel for
         for(int j=0; j<scale_count; ++j)
         {
             #pragma omp critical (seg_info)
@@ -118,6 +143,43 @@ int main(int argc, char **argv)
             PDPC_ASSERT(seg.region_count() == int(seeds.size()));
 
             // 1.2 Filtering ---------------------------------------------------
+#if 1
+            const Scalar scale = scales[j];
+            const Scalar alpha = 2 * scale;
+            std::vector<std::vector<int>> regions;
+            seg.fill(regions);
+
+            std::vector<bool> to_invalidate(seg.region_count(), false);
+
+            for(int label=0; label<seg.region_count(); ++label)
+            {
+                const int point_count = seg.region_size(label);
+
+                if(point_count <= 10)
+                {
+                    to_invalidate[label] = true;
+                }
+                else
+                {
+                    const Scalar area = compute_area(points, regions[label], seeds[label], alpha);
+                    const Scalar dist = std::sqrt(area);
+
+                    if(dist < 2 * scale)
+                    {
+                        to_invalidate[label] = true;
+                    }
+                }
+            }
+
+            const int before = seg.region_count();
+            seg.invalidate_regions(to_invalidate);
+            seg.make_full();
+            const int after = seg.region_count();
+            debug() << "Filter:\n"
+                    << "before  = " << before       << "\n"
+                    << "after   = " << after        << "\n"
+                    << "removed = " << before-after << "\n";
+#else
             std::vector<bool> to_invalidate(seg.region_count(), false);
             std::vector<std::vector<int>> regions;
             seg.fill(regions);
@@ -138,6 +200,7 @@ int main(int argc, char **argv)
 
             seg.invalidate_regions(to_invalidate);
             seg.make_full();
+#endif
         }
     }
 
@@ -305,4 +368,80 @@ int main(int argc, char **argv)
     ofs_comp.close();
 
     return 0;
+}
+
+class PointIterator
+{
+public:
+    using value_type        = CGALPoint;
+    using difference_type   = int;
+    using pointer           = CGALPoint*;
+    using reference         = CGALPoint&;
+    using iterator_category = std::random_access_iterator_tag;
+
+public:
+    PointIterator(int idx, const PointCloud* points, const std::vector<int>* region, const Matrix3& T, const Vector3& p) :
+        m_idx(idx),
+        m_points(points),
+        m_region(region),
+        m_T(T),
+        m_p(p)
+    {
+    }
+
+public:
+    PointIterator& operator ++ (){++m_idx; return *this;}
+    PointIterator& operator -- (){--m_idx; return *this;}
+    PointIterator  operator + (int /*i*/) const{PDPC_TODO; return *this;}
+    PointIterator  operator - (int /*i*/) const{PDPC_TODO; return *this;}
+    bool           operator == (const PointIterator& other) const{return m_idx == other.m_idx;}
+    bool           operator != (const PointIterator& other) const{return m_idx != other.m_idx;}
+    CGALPoint      operator * () const
+    {
+        const Vector3 q = m_T * (m_points->point(m_region->operator[](m_idx)) - m_p);
+        return CGALPoint(q.x(), q.y());
+    }
+
+    friend int operator - (const PointIterator& it1, const PointIterator& it2){return it1.m_idx - it2.m_idx;}
+
+protected:
+//    void advance();
+
+protected:
+    int m_idx;
+    const PointCloud* m_points;
+    const std::vector<int>* m_region;
+    Matrix3 m_T;
+    Vector3 m_p;
+};
+
+
+Scalar compute_area(const PointCloud& points,
+                    const std::vector<int>& region,
+                    int i,
+                    Scalar alpha)
+{
+    const Matrix3 T = orthonormal_basis(points.normal(i)).transpose();
+
+    PointIterator first(0,            &points, &region, T, points[i]);
+    PointIterator last(region.size(), &points, &region, T, points[i]);
+    Alpha_shape_2 alpha_shape(first, last, alpha, Alpha_shape_2::GENERAL);
+
+    Scalar area = 0;
+
+    for(auto f_it = alpha_shape.faces_begin(); f_it != alpha_shape.faces_end(); ++f_it)
+    {
+        const auto classif = alpha_shape.classify(f_it);
+        if(classif != Alpha_shape_2::EXTERIOR)
+        {
+            const auto& p1 = alpha_shape.point(f_it, 0);
+            const auto& p2 = alpha_shape.point(f_it, 1);
+            const auto& p3 = alpha_shape.point(f_it, 2);
+
+            area += triangle_area(p1.x(), p1.y(),
+                                  p2.x(), p2.y(),
+                                  p3.x(), p3.y());
+        }
+    }
+    return area;
 }
