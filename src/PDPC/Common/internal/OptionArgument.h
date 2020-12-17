@@ -18,6 +18,9 @@ protected:
     OptionArgument(const std::string& id,
                    const std::string& short_id = "");
 
+public:
+    virtual ~OptionArgument(){};
+
     bool match(const std::string &arg) const;
 
 protected:
