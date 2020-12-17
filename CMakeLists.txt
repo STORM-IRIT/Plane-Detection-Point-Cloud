@@ -8,7 +8,7 @@ set(CMAKE_CXX_FLAGS_DEBUG          "-DPDPC_DEBUG -g3 -ggdb")
 set(CMAKE_CXX_FLAGS_RELEASE        "-DNDEBUG -O3")
 set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-DNDEBUG -O2 -g3")
 
-# Enable helpfull warnings and C++11 for all files
+# Enable helpfull warnings and C++14 for all files
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
