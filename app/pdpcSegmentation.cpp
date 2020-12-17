@@ -24,6 +24,9 @@
 #include <CGAL/algorithm.h>
 #include <CGAL/assertions.h>
 
+#include <PDPC/Common/Colors.h>
+#include <PDPC/Common/String.h>
+
 typedef CGAL::Exact_predicates_inexact_constructions_kernel  K;
 typedef K::FT                                                FT;
 typedef K::Point_2                                           CGALPoint;
@@ -59,6 +62,8 @@ int main(int argc, char **argv)
 
     const bool in_v = opt.get_bool("verbose", "v").set_default(false).set_brief("Add verbose messages");
 
+    const bool in_debug = opt.get_bool("debug").set_default(false).set_brief("Save before/after segmentations as colored ply");
+
     bool ok = opt.ok();
     if(!ok) return 1;
 
@@ -86,6 +91,8 @@ int main(int argc, char **argv)
         return 1;
     }
 
+    if(in_debug) points.request_colors();
+
     // 1. Segmentations --------------------------------------------------------
     info().iff(in_v) << "Performing " << scale_count << " planar region growing";
     MSSegmentation ms_seg(scale_count, Segmentation(point_count));
@@ -95,7 +102,7 @@ int main(int argc, char **argv)
 
         points.build_knn_graph(in_k);
 
-        #pragma omp parallel for
+//        #pragma omp parallel for
         for(int j=0; j<scale_count; ++j)
         {
             #pragma omp critical (seg_info)
@@ -171,14 +178,29 @@ int main(int argc, char **argv)
                 }
             }
 
-            const int before = seg.region_count();
+            if(in_debug)
+            {
+                #pragma omp critical (debug_before)
+                {
+                    const auto colormap = Colormap::Tab20();
+                    seg.set_colors(points.colors_data(), Colors::Black(), colormap);
+                    Loader::Save("debug_before_" + str::to_string(j,3)+".ply", points, false);
+                }
+            }
+
             seg.invalidate_regions(to_invalidate);
             seg.make_full();
-            const int after = seg.region_count();
-            debug() << "Filter:\n"
-                    << "before  = " << before       << "\n"
-                    << "after   = " << after        << "\n"
-                    << "removed = " << before-after << "\n";
+
+            if(in_debug)
+            {
+                #pragma omp critical (debug_after)
+                {
+                    const auto colormap = Colormap::Tab20();
+                    seg.set_colors(points.colors_data(), Colors::Black(), colormap);
+                    Loader::Save("debug_after_" + str::to_string(j,3)+".ply", points, false);
+                }
+            }
+
 #else
             std::vector<bool> to_invalidate(seg.region_count(), false);
             std::vector<std::vector<int>> regions;
