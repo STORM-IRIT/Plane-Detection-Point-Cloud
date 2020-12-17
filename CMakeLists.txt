@@ -18,6 +18,10 @@ if(PDPC_USE_OMP)
     endif()
 endif()
 
+find_package(CGAL REQUIRED)
+set(CGAL_DO_NOT_WARN_ABOUT_CMAKE_BUILD_TYPE true)
+set(CGAL_DISABLE_ROUNDING_MATH_CHECK true) # for valgrind ?
+
 file(GLOB_RECURSE lib_headers src/*.hpp src/*.h)
 file(GLOB_RECURSE lib_sources src/*.cpp)
 file(GLOB_RECURSE lib_inlines src/*.inl)
@@ -32,6 +36,6 @@ foreach(file ${app_sources})
     message(STATUS "Build app ${name}")
     add_executable(${name} ${file})
     add_dependencies(${name} pdpclib)
-    target_link_libraries(${name} pdpclib)
+    target_link_libraries(${name} pdpclib CGAL::CGAL)
     install(TARGETS ${name} DESTINATION bin)
 endforeach()
