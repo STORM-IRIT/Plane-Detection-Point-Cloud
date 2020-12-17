@@ -19,7 +19,7 @@ Abstract Modern acquisition techniques generate detailed point clouds that sampl
 
 ### Depencencies
 
-The only required dependency is the C++ library [CGAL](https://github.com/CGAL/cgal).  
+The only required dependency is the C++ header-only library [CGAL](https://github.com/CGAL/cgal).  
 To obtain CGAL on Linux use
 ```
 sudo apt-get install libcgal-dev
@@ -58,7 +58,7 @@ Once the project is compiled and installed (see above), run the following comman
 ./generate_fig_09c.sh
 ./generate_fig_15b.sh
 ```
-The resulting colored point clouds are contained in several PLY `fig_*.ply`. 
+The resulting colored point clouds are contained in several PLY files `fig_*.ply`. 
 
 #### Process other 3D point clouds
 
