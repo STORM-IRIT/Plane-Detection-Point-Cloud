@@ -51,14 +51,11 @@ Tested using
 
 Several scripts available in the [figures](https://github.com/ThibaultLejemble/Plane-Detection-Point-Cloud/tree/main/figures) directory generate some part of the figures presented in the article **Persistence Analysis of Multi-scale Planar Structure Graph in Point Clouds [(PDF)](https://hal.archives-ouvertes.fr/hal-02490721/document)**.
 
-Once the project is compiled and installed (see above), run the following commands from the [figures](https://github.com/ThibaultLejemble/Plane-Detection-Point-Cloud/tree/main/figures) directory
+Once the project is compiled and installed (see above), run the following command from the [figures](https://github.com/ThibaultLejemble/Plane-Detection-Point-Cloud/tree/main/figures) directory
 ```
-./generate_fig_05.sh
-./generate_fig_09b.sh
-./generate_fig_09c.sh
-./generate_fig_15b.sh
+./replicate.sh
 ```
-The resulting colored point clouds are contained in several PLY files `fig_*.ply`. 
+The resulting colored point clouds are contained in several PLY files `fig_*.ply`.
 
 #### Process other 3D point clouds
 
