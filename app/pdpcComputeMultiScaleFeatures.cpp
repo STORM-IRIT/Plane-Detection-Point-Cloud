@@ -51,18 +51,16 @@ int main(int argc, char **argv)
     // 1. Scales ---------------------------------------------------------------
     info().iff(in_v) << "Computing " << in_scount << " scales";
 
-    Scalar sum_dist = 0;
+    std::vector<Scalar> dist_k(point_count, 0);
 
     #pragma omp parallel for
     for(int i=0; i<point_count; ++i)
     {
         const Scalar squared_dist = points.kdtree().k_nearest_neighbors(i, in_k).search().bottom().squared_distance;
-        const Scalar dist = std::sqrt(squared_dist);
-
-        #pragma omp atomic
-        sum_dist += dist;
+        dist_k[i] = std::sqrt(squared_dist);
     }
-    const Scalar local_point_spacing = sum_dist / point_count;
+    std::sort(dist_k.begin(), dist_k.end());
+    const Scalar local_point_spacing = dist_k[0.50*(point_count-1)]; // median
     const Scalar aabb_diag = points.aabb_diag();
 
     const int    scale_count = in_scount;
@@ -72,9 +70,8 @@ int main(int argc, char **argv)
     ScaleSampling scales;
     scales.log_sample(scale_min, scale_max, scale_count);
 
-    info().iff(in_v) << "Scale count = " << scale_count;
-    info().iff(in_v) << "Scale min   = " << scale_min;
-    info().iff(in_v) << "Scale max   = " << scale_max;
+    info().iff(in_v) << "  min   = " << scale_min;
+    info().iff(in_v) << "  max   = " << scale_max;
 
     // 2. Features -------------------------------------------------------------
     info().iff(in_v) << "Computing features";
