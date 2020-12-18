@@ -188,7 +188,7 @@ int main(int argc, char **argv)
         }
     } // for j
 
-    features.save(in_output + "_features.bin");
+    features.save(in_output + "_features.txt");
     scales.save(  in_output + "_scales.txt");
 
     return 0;
