@@ -18,8 +18,27 @@ bool MultiScaleFeatures::save(const std::string& filename, bool v) const
     const std::string ext = filename.substr(filename.find_last_of(".") + 1);
     if(ext == "txt")
     {
-        PDPC_TODO; // txt not yet implemented
-        return false;
+        std::ofstream ofs(filename);
+        if(!ofs.is_open())
+        {
+            error().iff(v) << "Failed to open output features file " << filename;
+            return false;
+        }
+
+        ofs << m_point_count << " " << m_scale_count << "\n";
+        for(int i=0; i<m_point_count; ++i)
+        {
+            for(int j=0; j<m_scale_count; ++j)
+            {
+                ofs << normal(i,j)[0] << " "
+                    << normal(i,j)[1] << " "
+                    << normal(i,j)[2] << " "
+                    << k1(i,j)        << " "
+                    << k2(i,j)        << " ";
+            }
+            ofs << "\n";
+        }
+        return true;
     }
     else
     {
@@ -50,8 +69,30 @@ bool MultiScaleFeatures::load(const std::string& filename, bool v)
     const std::string ext = filename.substr(filename.find_last_of(".") + 1);
     if(ext == "txt")
     {
-        PDPC_TODO; // txt not yet implemented
-        return false;
+        std::ifstream ifs(filename);
+        if(!ifs.is_open())
+        {
+            error().iff(v) << "Failed to open input features file " << filename;
+            return false;
+        }
+
+        ifs >> m_point_count;
+        ifs >> m_scale_count;
+
+        this->resize(m_point_count, m_scale_count);
+
+        for(int i=0; i<m_point_count; ++i)
+        {
+            for(int j=0; j<m_scale_count; ++j)
+            {
+                ifs >> normal(i,j)[0];
+                ifs >> normal(i,j)[1];
+                ifs >> normal(i,j)[2];
+                ifs >> k1(i,j);
+                ifs >> k2(i,j);
+            }
+        }
+        return true;
     }
     else if(ext == "bin")
     {
