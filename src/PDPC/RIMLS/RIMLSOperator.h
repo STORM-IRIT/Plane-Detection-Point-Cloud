@@ -54,7 +54,7 @@ public:
 protected:
     Scalar      m_scale;
 
-    Scalar      m_reweighting_sigma;
+    Scalar      m_reweighting_sigma; //TODO this is never used...
     int         m_reweighting_step;
 
     int         m_step_max;
