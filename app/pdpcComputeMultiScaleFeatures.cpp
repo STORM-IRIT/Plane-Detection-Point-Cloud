@@ -96,29 +96,65 @@ int main(int argc, char **argv)
 
         // 2.1 poisson disk sampling -------------------------------------------
         {
-            rank.resize(sampling.size());
-            std::iota(rank.begin(), rank.end(), 0);
-            std::random_shuffle(rank.begin(), rank.end());
-            std::fill(is_free.begin(), is_free.end(), true);
-
-            sampling2.clear();
-
-            const Scalar radius = in_alpha * scale;
-
-            for(int idx_sample : rank)
+            if(j == 0)
             {
-                const int idx_point = sampling[idx_sample];
-                if(is_free[idx_point])
-                {
-                    sampling2.emplace_back(idx_point);
-                    is_free[idx_point] = false;
-
-                    for(int idx_nei : points.kdtree().range_neighbors(idx_point, 2*radius)) // factor 2 !!!!
-                        is_free[idx_nei] = false;
-                }
+                std::iota(sampling.begin(), sampling.end(), 0);
+                // kdtree already built
             }
-            std::swap(sampling, sampling2);
-            points.kdtree().rebuild(sampling);
+            else
+            {
+                rank.resize(sampling.size());
+                std::iota(rank.begin(), rank.end(), 0);
+                std::random_shuffle(rank.begin(), rank.end());
+                std::fill(is_free.begin(), is_free.end(), true);
+
+                sampling2.clear();
+
+                const Scalar radius = in_alpha * scale;
+
+#if 1
+                // first version (less efficient because assume heterogeneous scale sampling)
+                for(int idx_sample : rank)
+                {
+                    const int idx_point = sampling[idx_sample];
+                    bool free = true;
+                    for(int idx_nei : points.kdtree().range_neighbors(idx_point, radius))
+                    {
+                        if(!is_free[idx_nei])
+                        {
+                            free = false;
+                            break;
+                        }
+                    }
+
+                    if(free)
+                    {
+                        sampling2.emplace_back(idx_point);
+                        is_free[idx_point] = false;
+
+                        for(int idx_nei : points.kdtree().range_neighbors(idx_point, radius)) is_free[idx_nei] = false;
+                    }
+                }
+#else
+                // second version (more efficient because assume homogeneous scale sampling)
+                // (these two versions do not give the same results)
+                for(int idx_sample : rank)
+                {
+                    const int idx_point = sampling[idx_sample];
+                    if(is_free[idx_point])
+                    {
+                        sampling2.emplace_back(idx_point);
+                        is_free[idx_point] = false;
+
+                        for(int idx_nei : points.kdtree().range_neighbors(idx_point, 2*radius)) // factor 2 !!!!
+                            is_free[idx_nei] = false;
+                    }
+                }
+#endif
+                std::swap(sampling, sampling2);
+                points.kdtree().rebuild(sampling);
+            }
+//            debug() << sampling.size() << " points sampled";
         }
 
         // 2.2 Features --------------------------------------------------------
