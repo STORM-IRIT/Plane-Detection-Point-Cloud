@@ -98,7 +98,7 @@ int main(int argc, char **argv)
                     points.request_colors();
                     const auto colormap = Colormap::Tab20();
                     res.set_colors(points.colors_data(), Colors::Black(), colormap);
-                    Loader::Save(in_output + "_range_" + str::to_string(n,3) + ".ply", points);
+                    Loader::Save(in_output + "_" + str::to_string(pers_min,3) + "_" + str::to_string(pers_max,3) + ".ply", points);
                 }
                 debug() << "TODO save txt file";
             }
