@@ -57,9 +57,6 @@ int main(int argc, char **argv)
 
     const int scale_count = comp_seg.size();
 
-//    constexpr int scale_sup = 1000; //?
-//    const int scale_count_sup = std::min(scale_count, scale_sup);
-
     // info
     info() << comp_set.size() << " components";
     for(int i=0; i<comp_set.size(); ++i)
@@ -148,9 +145,6 @@ int main(int argc, char **argv)
     // Scale -------------------------------------------------------------------
     if(!in_scales.empty())
     {
-//        std::vector<int> labeling(point_count, -1);
-//        MSSegmentation ms_seg(scale_count);
-
         for(std::string str : in_scales)
         {
             const int idx_scale = std::stoi(str);
