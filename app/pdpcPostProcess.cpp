@@ -196,57 +196,5 @@ int main(int argc, char **argv)
         }
     }
 
-    // TEST 1 ------------------------------------------------------------------
-    // DisplayBestComponentAction::update_all()
-    // select most pers comp in min/max scale range
-    // min persistence
-    // min points per regions
-
-    // TEST 2 ------------------------------------------------------------------
-    // DisplayBestComponent2Action::update_all()
-    // select most pers comp including a given scale
-    // min persistence
-    // min points per regions
-
-    // TEST 3 ------------------------------------------------------------------
-    // DisplayBestComponentPerScaleAction::on_scale_changed
-    // select comp from most to less pers at a given scale
-
-    // TEST 4 ------------------------------------------------------------------
-    //
-    //
-
-
-
-
-
-//    // -------------------------------------------------------------------------
-//    // 2. Show components by persistence (plugin Action)
-//    {
-//        points.request_colors(Colors::Black());
-//        const auto colormap = Colormap::Tab20();
-//        for(int pers=0; pers<scale_count; ++pers)
-//        {
-//            for(int idx_comp=0; idx_comp<comp_set.size(); ++idx_comp)
-//            {
-//                if(comp_set[idx_comp].persistence() >= pers)
-//                {
-//                    for(int i : reg_set[idx_comp])
-//                        points.color(i) = colormap[idx_comp];
-//                }
-//                else
-//                {
-//                    // comp are sorted by pers
-//                    break;
-//                }
-//            }
-//            Loader::Save("test2_" + str::to_string(pers,2)+".ply", points);
-//        }
-//    }
-
-
-
-
-
     return 0;
 }
