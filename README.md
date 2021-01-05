@@ -57,6 +57,7 @@ Once the project is compiled and installed (see above), run the following comman
 ```
 The resulting colored point clouds are contained in several PLY files `fig_*.ply`.
 The text files `fig_*.txt` contain one integer per line corresponding to one label per point (where `-1` means that the point is unlabeled).
+Note that it takes around 40 minutes with 8 cores at 3.70GHz and 32G of RAM. 
 
 #### Process other 3D point clouds
 
