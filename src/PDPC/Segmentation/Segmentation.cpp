@@ -3,6 +3,7 @@
 
 #include <algorithm>
 #include <numeric>
+#include <fstream>
 
 namespace pdpc {
 
@@ -119,6 +120,20 @@ std::istream& Segmentation::read(std::istream& is)
     this->compute_counts();
     PDPC_DEBUG_ASSERT(this->is_consistent());
     return is;
+}
+
+bool Segmentation::save(const std::string& filename) const
+{
+    std::ofstream ofs(filename);
+    if(!ofs.is_open())
+    {
+        PDPC_DEBUG_ERROR;
+        return false;
+    }
+
+    for(int l : m_labels) ofs << l << "\n";
+
+    return true;
 }
 
 // Iterators -------------------------------------------------------------------

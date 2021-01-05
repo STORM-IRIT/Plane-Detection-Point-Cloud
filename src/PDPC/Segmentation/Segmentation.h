@@ -57,6 +57,7 @@ public:
 public:
     std::ostream& write(std::ostream& os) const;
     std::istream& read(std::istream& is);
+    bool save(const std::string& filename) const;
 
     // Iterators ---------------------------------------------------------------
 public:
