@@ -1,6 +1,6 @@
 # Plane Detection in 3D Point Clouds
 
-This c++ project is the author's implementation of the following article   
+This c++ project is the authors implementation of the following article   
 
 ## Persistence Analysis of Multi-scale Planar Structure Graph in Point Clouds [(PDF)](https://hal.archives-ouvertes.fr/hal-02490721/document)  
 
@@ -49,7 +49,7 @@ Tested using
 
 #### Replicate results 
 
-Several scripts available in the [figures](https://github.com/ThibaultLejemble/Plane-Detection-Point-Cloud/tree/main/figures) directory generate some part of the figures presented in the article **Persistence Analysis of Multi-scale Planar Structure Graph in Point Clouds [(PDF)](https://hal.archives-ouvertes.fr/hal-02490721/document)**.
+Several scripts available in the [figures](https://github.com/ThibaultLejemble/Plane-Detection-Point-Cloud/tree/main/figures) directory generate a subset of the figures presented in the article **Persistence Analysis of Multi-scale Planar Structure Graph in Point Clouds [(PDF)](https://hal.archives-ouvertes.fr/hal-02490721/document)**.
 
 Once the project is compiled and installed (see above), run the following command from the [figures](https://github.com/ThibaultLejemble/Plane-Detection-Point-Cloud/tree/main/figures) directory
 ```
@@ -61,13 +61,14 @@ Note that it takes around 40 minutes with 8 cores at 3.70GHz and 32G of RAM.
 
 #### Process other 3D point clouds
 
-To process any point cloud given as a PLY file `mycloud.ply`, first run the following commands to preprocess the data
+To process any point cloud given as a PLY file `mycloud.ply` (OBJ files are handled as well), first run the following commands to preprocess the data
 ```
 pdpcComputeMultiScaleFeatures -v -i mycloud.ply -o mycloud
 pdpcSegmentation -v -i mycloud.ply -s mycloud_scales.txt -f mycloud_features.txt -o mycloud
 ``` 
 The first program `pdpcComputeMultiScaleFeatures` computes surface curvatures and normals from the point cloud at multiple scales.
-The second program `pdpcSegmentation` performs planar region growings at all scales.
+The second program `pdpcSegmentation` performs planar region growings at all scales. 
+Note that an oriented normal vector is required for each input point. 
 
 Finally, the program `pdpcPostProcess` can perform 3 different operations depending on the given options
 ```
@@ -75,16 +76,11 @@ pdpcPostProcess -v -i mycloud.ply -s mycloud_seg.txt -c mycloud_comp.txt -o resu
 pdpcPostProcess -v -i mycloud.ply -s mycloud_seg.txt -c mycloud_comp.txt -o results2 -pers 10 15 20 25 30 35 40
 pdpcPostProcess -v -i mycloud.ply -s mycloud_seg.txt -c mycloud_comp.txt -o results3 -scales 5 10 15 20 25 30 35
 ```
-- `-range birth1 death1 birth2 death2` will generate two files showing components that persist in the ranges (`birth1`,`death1`) and (`birth2`,`death2`)
-- `-pers pers1 pers2` will generate two files showing components that are more persistent than the persistence thresholds `pers1` and `pers2`
-- `-scale scale1 scale2` will generate two files showing the most persistent components that include the scale thresholds `scale1` and `scale2`
+- `-range birth1 death1 birth2 death2` generates two files showing components that persist in the scale ranges (`birth1`,`death1`) and (`birth2`,`death2`)
+- `-pers pers1 pers2` generates two files showing components that are more persistent than the persistence thresholds `pers1` and `pers2`
+- `-scale scale1 scale2` generates two files showing the most persistent components that include the scale thresholds `scale1` and `scale2`
 
 Results are generated as text files with one integer per line corresponding to one label per point (where `-1` means that the point is unlabeled). 
 Add the option `-col` so that the colored PLY files are also generated. 
 To modify some parameters please check the help of the programs by running them with the option `-h`.
 
-<!-- 
-## TODO
-- more documentations on the intermediate file format
-- improve documentation of the code 
--->
