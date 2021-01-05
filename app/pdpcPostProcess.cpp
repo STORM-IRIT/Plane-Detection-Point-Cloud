@@ -15,8 +15,8 @@ int main(int argc, char **argv)
 {
     Option opt(argc, argv);
     const std::string in_input  = opt.get_string("input",  "i").set_brief("Input point cloud (.ply/.obj)").set_required();
-    const std::string in_seg    = opt.get_string("seg",    "s").set_brief("TODO").set_default("output_seg.txt");
-    const std::string in_comp   = opt.get_string("comp",   "c").set_brief("TODO").set_default("output_comp.txt");
+    const std::string in_seg    = opt.get_string("seg",    "s").set_brief("Input multi-scale segmentation").set_default("output_seg.txt");
+    const std::string in_comp   = opt.get_string("comp",   "c").set_brief("Input components").set_default("output_comp.txt");
     const std::string in_output = opt.get_string("output", "o").set_brief("Output name").set_default("output");
 
     const std::vector<std::string> in_ranges = opt.get_strings("range" ).set_brief("Persistence ranges");
