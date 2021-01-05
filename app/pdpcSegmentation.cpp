@@ -407,8 +407,8 @@ public:
 public:
     PointIterator& operator ++ (){++m_idx; return *this;}
     PointIterator& operator -- (){--m_idx; return *this;}
-    PointIterator  operator + (int /*i*/) const{PDPC_TODO; return *this;}
-    PointIterator  operator - (int /*i*/) const{PDPC_TODO; return *this;}
+    PointIterator  operator + (int /*i*/) const{PDPC_ERROR_MSG("Not used"); return *this;}
+    PointIterator  operator - (int /*i*/) const{PDPC_ERROR_MSG("Not used"); return *this;}
     bool           operator == (const PointIterator& other) const{return m_idx == other.m_idx;}
     bool           operator != (const PointIterator& other) const{return m_idx != other.m_idx;}
     CGALPoint      operator * () const
