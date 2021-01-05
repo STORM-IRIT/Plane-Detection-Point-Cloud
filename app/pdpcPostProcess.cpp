@@ -25,6 +25,8 @@ int main(int argc, char **argv)
 
     const bool in_col = opt.get_bool("colorize", "col").set_default(false).set_brief("Colorize point cloud and save it as ply");
 
+    const bool in_debug = opt.get_bool("debug").set_default(false).set_brief("Print debug info");
+
     const bool in_v = opt.get_bool("verbose", "v").set_default(false).set_brief("Add verbose messages");
 
     bool ok = opt.ok();
@@ -45,14 +47,17 @@ int main(int argc, char **argv)
 
     const int scale_count = comp_seg.size();
 
-    // info
-    info() << comp_data.size() << " components";
-    for(int i=0; i<comp_data.size(); ++i)
+    // debug info
+    if(in_debug)
     {
-        info() << i << ": " << comp_data[i].birth_level() << " --- "
-               << comp_data[i].death_level() << " = "
-               << comp_data[i].persistence()
-               << " (" << comp_data[i].size() << " pts)";
+        debug() << comp_data.size() << " components";
+        for(int i=0; i<comp_data.size(); ++i)
+        {
+            debug() << i << ": " << comp_data[i].birth_level() << " --- "
+                    << comp_data[i].death_level() << " = "
+                    << comp_data[i].persistence()
+                    << " (" << comp_data[i].size() << " pts)";
+        }
     }
 
     // Persistence range -------------------------------------------------------
