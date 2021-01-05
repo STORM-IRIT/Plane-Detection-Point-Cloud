@@ -17,6 +17,9 @@ Abstract Modern acquisition techniques generate detailed point clouds that sampl
 
 ## Getting Started
 
+The script `replicate.sh` downloads the required dependencies, compile and install the code, and generates a subset of the data shown by the figures of the article.
+The following sections give some details on these different steps. 
+
 ### Depencencies
 
 The only required dependency is the C++ header-only library [CGAL](https://github.com/CGAL/cgal).  
@@ -28,7 +31,7 @@ Other depencencies like [Eigen](https://gitlab.com/libeigen/eigen) and [Ponca](h
 
 ### Compilation
 
-To compile the code and install the programs in `/usr/local/bin` run the following commands  
+To download the project, compile the code and install the programs in `/usr/local/bin` run the following commands  
 ```
 git clone git@github.com:ThibaultLejemble/Plane-Detection-Point-Cloud.git
 cd Plane-Detection-Point-Cloud
@@ -49,14 +52,13 @@ Tested using
 
 #### Replicate results 
 
-Several scripts available in the [figures](https://github.com/ThibaultLejemble/Plane-Detection-Point-Cloud/tree/main/figures) directory generate a subset of the figures presented in the article **Persistence Analysis of Multi-scale Planar Structure Graph in Point Clouds [(PDF)](https://hal.archives-ouvertes.fr/hal-02490721/document)**.
+Several scripts available in the [figures](https://github.com/ThibaultLejemble/Plane-Detection-Point-Cloud/tree/main/figures) directory generate the data shown by a subset of the figures presented in the article **Persistence Analysis of Multi-scale Planar Structure Graph in Point Clouds [(PDF)](https://hal.archives-ouvertes.fr/hal-02490721/document)**.
 
 Once the project is compiled and installed (see above), run the following command from the [figures](https://github.com/ThibaultLejemble/Plane-Detection-Point-Cloud/tree/main/figures) directory
 ```
-./replicate.sh
+./generate.sh
 ```
 The resulting colored point clouds are contained in several PLY files `fig_*.ply`.
-The text files `fig_*.txt` contain one integer per line corresponding to one label per point (where `-1` means that the point is unlabeled).
 Note that it takes around 40 minutes with 8 cores at 3.70GHz and 32G of RAM. 
 
 #### Process other 3D point clouds
