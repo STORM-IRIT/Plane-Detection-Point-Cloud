@@ -74,15 +74,16 @@ pdpcPostProcess -v -i mycloud.ply -s mycloud_seg.txt -c mycloud_comp.txt -o resu
 pdpcPostProcess -v -i mycloud.ply -s mycloud_seg.txt -c mycloud_comp.txt -o results2 -pers 10 15 20 25 30 35 40
 pdpcPostProcess -v -i mycloud.ply -s mycloud_seg.txt -c mycloud_comp.txt -o results3 -scales 5 10 15 20 25 30 35
 ```
-- `-range birth1 death1 birth2 death2` will generate two files showing components that persist in the range (`birth1`,`death1`) and (`birth2`,`death2`)
+- `-range birth1 death1 birth2 death2` will generate two files showing components that persist in the ranges (`birth1`,`death1`) and (`birth2`,`death2`)
 - `-pers pers1 pers2` will generate two files showing components that are more persistent than the persistence thresholds `pers1` and `pers2`
 - `-scale scale1 scale2` will generate two files showing the most persistent components that include the scale thresholds `scale1` and `scale2`
 
+Results are generated as text files with one integer per line corresponding to one label per point (where `-1` means that the point is unlabeled). 
 Add the option `-col` so that the colored PLY files are also generated. 
 To modify some parameters please check the help of the programs by running them with the option `-h`.
 
 <!-- 
 ## TODO
-- more documentations on the file format
+- more documentations on the intermediate file format
 - improve documentation of the code 
 -->
