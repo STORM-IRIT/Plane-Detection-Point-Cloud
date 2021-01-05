@@ -14,6 +14,9 @@ public:
 public:
     bool is_valid() const;
 
+    bool load(const std::string& filename);
+    bool save(const std::string& filename) const;
+
     // Modifiers ---------------------------------------------------------------
 public:
     void make_continuous();
