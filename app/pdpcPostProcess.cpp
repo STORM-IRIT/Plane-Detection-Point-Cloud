@@ -91,7 +91,7 @@ int main(int argc, char **argv)
                     points.request_colors();
                     const auto colormap = Colormap::Tab20();
                     res.set_colors(points.colors_data(), Colors::Black(), colormap);
-                    Loader::Save(filename + ".ply", points);
+                    Loader::Save(filename + ".ply", points, in_v);
                 }
             }
         }
@@ -133,7 +133,7 @@ int main(int argc, char **argv)
                 points.request_colors();
                 const auto colormap = Colormap::Tab20();
                 seg.set_colors(points.colors_data(), Colors::Black(), colormap);
-                Loader::Save(filename + ".ply", points);
+                Loader::Save(filename + ".ply", points, in_v);
             }
         }
     }
@@ -182,7 +182,7 @@ int main(int argc, char **argv)
                 points.request_colors();
                 const auto colormap = Colormap::Tab20();
                 seg.set_colors(points.colors_data(), Colors::Black(), colormap);
-                Loader::Save(filename + ".ply", points);
+                Loader::Save(filename + ".ply", points, in_v);
             }
         }
     }
