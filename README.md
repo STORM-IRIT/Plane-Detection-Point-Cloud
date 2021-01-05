@@ -88,7 +88,7 @@ ___
 
 Please cite this paper if you use this code
 ```
-@article{https://doi.org/10.1111/cgf.13910,
+@article{lejemble2020persistence,
 author = {Lejemble, Thibault and Mura, Claudio and Barthe, Loc and Mellado, Nicolas},
 title = {Persistence Analysis of Multi-scale Planar Structure Graph in Point Clouds},
 journal = {Computer Graphics Forum},
