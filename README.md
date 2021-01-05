@@ -56,6 +56,7 @@ Once the project is compiled and installed (see above), run the following comman
 ./replicate.sh
 ```
 The resulting colored point clouds are contained in several PLY files `fig_*.ply`.
+The text files `fig_*.txt` contain one integer per line corresponding to one label per point (where `-1` means that the point is unlabeled).
 
 #### Process other 3D point clouds
 
