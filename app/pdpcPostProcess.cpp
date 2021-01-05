@@ -3,10 +3,9 @@
 #include <PDPC/Common/Colors.h>
 #include <PDPC/Common/String.h>
 #include <PDPC/Segmentation/MSSegmentation.h>
-#include <PDPC/Segmentation/RegionSet.h>
-#include <PDPC/Persistence/ComponentSet.h>
 #include <PDPC/PointCloud/Loader.h>
 #include <PDPC/PointCloud/PointCloud.h>
+#include <PDPC/Persistence/ComponentDataSet.h>
 
 #include <fstream>
 
@@ -16,9 +15,8 @@ int main(int argc, char **argv)
 {
     Option opt(argc, argv);
     const std::string in_input  = opt.get_string("input",  "i").set_brief("Input point cloud (.ply/.obj)").set_required();
-    const std::string in_seg    = opt.get_string("seg",    "s").set_brief("TODO").set_default("output_seg.bin");
-    const std::string in_reg    = opt.get_string("reg",    "r").set_brief("TODO").set_default("output_reg.bin");
-    const std::string in_comp   = opt.get_string("comp",   "c").set_brief("TODO").set_default("output_comp.bin");
+    const std::string in_seg    = opt.get_string("seg",    "s").set_brief("TODO").set_default("output_seg.txt");
+    const std::string in_comp   = opt.get_string("comp",   "c").set_brief("TODO").set_default("output_comp.txt");
     const std::string in_output = opt.get_string("output", "o").set_brief("Output name").set_default("output");
 
     const std::vector<std::string> in_ranges = opt.get_strings("range" ).set_brief("Persistence ranges");
@@ -38,33 +36,23 @@ int main(int argc, char **argv)
     const int point_count = points.size();
 
     MSSegmentation comp_seg;
-    std::ifstream ifs_seg(in_seg);
-    PDPC_ASSERT(ifs_seg.is_open());
-    comp_seg.read(ifs_seg);
-    ifs_seg.close();
+    ok = comp_seg.load(in_seg);
+    if(!ok) return 1;
 
-    RegionSet reg_set;
-    std::ifstream ifs_reg(in_reg);
-    PDPC_ASSERT(ifs_reg.is_open());
-    reg_set.read(ifs_reg);
-    ifs_reg.close();
-
-    ComponentSet comp_set;
-    std::ifstream ifs_comp(in_comp);
-    PDPC_ASSERT(ifs_comp.is_open());
-    comp_set.read(ifs_comp);
-    ifs_comp.close();
+    ComponentDataSet comp_data;
+    ok = comp_data.load(in_comp);
+    if(!ok) return 1;
 
     const int scale_count = comp_seg.size();
 
     // info
-    info() << comp_set.size() << " components";
-    for(int i=0; i<comp_set.size(); ++i)
+    info() << comp_data.size() << " components";
+    for(int i=0; i<comp_data.size(); ++i)
     {
-        info() << i << ": " << comp_set[i].birth_level() << " --- "
-               << comp_set[i].death_level() << " = "
-               << comp_set[i].persistence()
-               << " (" << reg_set[i].size() << " pts)";
+        info() << i << ": " << comp_data[i].birth_level() << " --- "
+               << comp_data[i].death_level() << " = "
+               << comp_data[i].persistence()
+               << " (" << comp_data[i].size() << " pts)";
     }
 
     // Persistence range -------------------------------------------------------
@@ -81,12 +69,12 @@ int main(int argc, char **argv)
                 if(pers_max < pers_min) warning().iff(in_v) << "Persistence range must be ordered, the output will be empty";
 
                 Segmentation res(point_count);
-                res.resize_region(comp_set.size());
-                for(int c=0; c<comp_set.size(); ++c)
+                res.resize_region(comp_data.size());
+                for(int c=0; c<comp_data.size(); ++c)
                 {
-                    if(pers_min <= comp_set[c].persistence() && comp_set[c].persistence() <= pers_max)
+                    if(pers_min <= comp_data[c].persistence() && comp_data[c].persistence() <= pers_max)
                     {
-                        for(int i : reg_set[c]) res.set_label(i, c);
+                        for(int i : comp_data[c].indices()) res.set_label(i, c);
                     }
                 }
 
@@ -114,11 +102,11 @@ int main(int argc, char **argv)
             std::vector<int> labeling(point_count, -1);
             const int pers = std::stoi(str);
 
-            for(int c=0; c<comp_set.size(); ++c)
+            for(int c=0; c<comp_data.size(); ++c)
             {
-                if(comp_set[c].persistence() >= pers)
+                if(comp_data[c].persistence() >= pers)
                 {
-                    for(int i : reg_set[c])
+                    for(int i : comp_data[c].indices())
                         labeling[i] = c;
                 }
                 else
@@ -162,7 +150,7 @@ int main(int argc, char **argv)
                     const int idx_comp = comp_seg[j][idx_point];
                     if(idx_comp == -1) continue;
 
-                    const Component& comp = comp_set[idx_comp];
+                    const auto& comp = comp_data[idx_comp];
 
                     if(comp.birth_level() <= idx_scale && idx_scale <= comp.death_level())
                     {

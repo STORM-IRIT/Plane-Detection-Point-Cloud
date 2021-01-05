@@ -13,6 +13,7 @@
 #include <PDPC/Segmentation/RegionSet.h>
 #include <PDPC/Graph/HierarchicalGraph.h>
 #include <PDPC/Persistence/ComponentSet.h>
+#include <PDPC/Persistence/ComponentDataSet.h>
 
 #include <set>
 
@@ -376,18 +377,10 @@ int main(int argc, char **argv)
         }
     }
 
-    // save
-    std::ofstream ofs_seg(in_output + "_seg.bin");
-    comp_seg.write(ofs_seg);
-    ofs_seg.close();
+    ComponentDataSet comp_data(comp_set, std::move(reg_set));
+    comp_data.save(in_output + "_comp.txt");
 
-    std::ofstream ofs_reg(in_output + "_reg.bin");
-    reg_set.write(ofs_reg);
-    ofs_reg.close();
-
-    std::ofstream ofs_comp(in_output + "_comp.bin");
-    comp_set.write(ofs_comp);
-    ofs_comp.close();
+    comp_seg.save(in_output + "_seg.txt");
 
     return 0;
 }
