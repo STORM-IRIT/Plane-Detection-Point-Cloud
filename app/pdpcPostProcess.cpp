@@ -78,14 +78,16 @@ int main(int argc, char **argv)
                     }
                 }
 
+                // save
+                const std::string filename = in_output + "_" + str::to_string(pers_min,3) + "_" + str::to_string(pers_max,3);
+                res.save(filename + ".txt");
                 if(in_col)
                 {
                     points.request_colors();
                     const auto colormap = Colormap::Tab20();
                     res.set_colors(points.colors_data(), Colors::Black(), colormap);
-                    Loader::Save(in_output + "_" + str::to_string(pers_min,3) + "_" + str::to_string(pers_max,3) + ".ply", points);
+                    Loader::Save(filename + ".ply", points);
                 }
-                debug() << "TODO save txt file";
             }
         }
         else
@@ -119,14 +121,15 @@ int main(int argc, char **argv)
             seg.invalidate_small_region(10);
 
             // save
+            const std::string filename = in_output + "_" + str::to_string(pers,3);
+            seg.save(filename + ".txt");
             if(in_col)
             {
                 points.request_colors();
                 const auto colormap = Colormap::Tab20();
                 seg.set_colors(points.colors_data(), Colors::Black(), colormap);
-                Loader::Save(in_output + "_" + str::to_string(pers,3) + ".ply", points);
+                Loader::Save(filename + ".ply", points);
             }
-            debug() << "TODO save txt file";
         }
     }
 
@@ -167,14 +170,15 @@ int main(int argc, char **argv)
             seg.invalidate_small_region(10);
 
             // save
+            const std::string filename = in_output + "_" + str::to_string(idx_scale,3);
+            seg.save(filename);
             if(in_col)
             {
                 points.request_colors();
                 const auto colormap = Colormap::Tab20();
                 seg.set_colors(points.colors_data(), Colors::Black(), colormap);
-                Loader::Save(in_output + "_" + str::to_string(idx_scale,3) + ".ply", points);
+                Loader::Save(filename + ".ply", points);
             }
-            debug() << "TODO save txt file";
         }
     }
 
