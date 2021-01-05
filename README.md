@@ -62,7 +62,6 @@ The resulting colored point clouds are contained in several PLY files `fig_*.ply
 TODO
 
 ## TODO
-- output txt files for results
 - add documentations on the file format
 - add documentations on the different programs
 - improve documentation of the code
