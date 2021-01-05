@@ -176,7 +176,7 @@ int main(int argc, char **argv)
 
             // save
             const std::string filename = in_output + "_" + str::to_string(idx_scale,3);
-            seg.save(filename);
+            seg.save(filename + ".txt");
             if(in_col)
             {
                 points.request_colors();
