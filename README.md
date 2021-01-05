@@ -84,3 +84,20 @@ Results are generated as text files with one integer per line corresponding to o
 Add the option `-col` so that the colored PLY files are also generated. 
 To modify some parameters please check the help of the programs by running them with the option `-h`.
 
+___
+
+Please cite this paper if you use this code
+```
+@article{https://doi.org/10.1111/cgf.13910,
+author = {Lejemble, Thibault and Mura, Claudio and Barthe, Loc and Mellado, Nicolas},
+title = {Persistence Analysis of Multi-scale Planar Structure Graph in Point Clouds},
+journal = {Computer Graphics Forum},
+volume = {39},
+number = {2},
+pages = {35-50},
+doi = {https://doi.org/10.1111/cgf.13910},
+url = {https://onlinelibrary.wiley.com/doi/abs/10.1111/cgf.13910},
+year = {2020}
+}
+```
+
