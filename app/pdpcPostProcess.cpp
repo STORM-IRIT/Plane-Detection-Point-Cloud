@@ -14,20 +14,18 @@ using namespace pdpc;
 int main(int argc, char **argv)
 {
     Option opt(argc, argv);
-    const std::string in_input  = opt.get_string("input",  "i").set_brief("Input point cloud (.ply/.obj)").set_required();
+    const std::string in_input  = opt.get_string("input",  "i").set_brief("Input point cloud (.ply/.obj)" ).set_required();
     const std::string in_seg    = opt.get_string("seg",    "s").set_brief("Input multi-scale segmentation").set_default("output_seg.txt");
-    const std::string in_comp   = opt.get_string("comp",   "c").set_brief("Input components").set_default("output_comp.txt");
-    const std::string in_output = opt.get_string("output", "o").set_brief("Output name").set_default("output");
+    const std::string in_comp   = opt.get_string("comp",   "c").set_brief("Input components"              ).set_default("output_comp.txt");
+    const std::string in_output = opt.get_string("output", "o").set_brief("Output name"                   ).set_default("output");
 
-    const std::vector<std::string> in_ranges = opt.get_strings("range" ).set_brief("Persistence ranges");
-    const std::vector<std::string> in_scales = opt.get_strings("scales").set_brief("Scales threshold");
-    const std::vector<std::string> in_pers   = opt.get_strings("persistence", "pers").set_brief("Persistence threshold");
+    const std::vector<std::string> in_ranges = opt.get_strings("range"              ).set_brief("Persistence ranges");
+    const std::vector<std::string> in_scales = opt.get_strings("scales"             ).set_brief("Scale thresholds");
+    const std::vector<std::string> in_pers   = opt.get_strings("persistence", "pers").set_brief("Persistence thresholds");
 
-    const bool in_col = opt.get_bool("colorize", "col").set_default(false).set_brief("Colorize point cloud and save it as ply");
-
-    const bool in_debug = opt.get_bool("debug").set_default(false).set_brief("Print debug info");
-
-    const bool in_v = opt.get_bool("verbose", "v").set_default(false).set_brief("Add verbose messages");
+    const bool in_col   = opt.get_bool("colorize", "col").set_default(false).set_brief("Colorize the point cloud and save it as PLY");
+    const bool in_debug = opt.get_bool("debug"          ).set_default(false).set_brief("Print some debug info");
+    const bool in_v     = opt.get_bool("verbose", "v"   ).set_default(false).set_brief("Add verbose messages");
 
     bool ok = opt.ok();
     if(!ok) return 1;
