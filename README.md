@@ -60,10 +60,29 @@ The text files `fig_*.txt` contain one integer per line corresponding to one lab
 
 #### Process other 3D point clouds
 
-TODO
+To process any point cloud given as a PLY file `mycloud.ply`, first run the following commands to preprocess the data
+```
+pdpcComputeMultiScaleFeatures -v -i mycloud.ply -o mycloud
+pdpcSegmentation -v -i mycloud.ply -s mycloud_scales.txt -f mycloud_features.txt -o mycloud
+``` 
+The first program `pdpcComputeMultiScaleFeatures` computes surface curvatures and normals from the point cloud at multiple scales.
+The second program `pdpcSegmentation` performs planar region growings at all scales.
 
+Finally, the program `pdpcPostProcess` can perform 3 different operations depending on the given options
+```
+pdpcPostProcess -v -i mycloud.ply -s mycloud_seg.txt -c mycloud_comp.txt -o results1 -range 0 9 10 19 20 29 30 39 40 49 
+pdpcPostProcess -v -i mycloud.ply -s mycloud_seg.txt -c mycloud_comp.txt -o results2 -pers 10 15 20 25 30 35 40
+pdpcPostProcess -v -i mycloud.ply -s mycloud_seg.txt -c mycloud_comp.txt -o results3 -scales 5 10 15 20 25 30 35
+```
+- `-range birth1 death1 birth2 death2` will generate two files showing components that persist in the range (`birth1`,`death1`) and (`birth2`,`death2`)
+- `-pers pers1 pers2` will generate two files showing components that are more persistent than the persistence thresholds `pers1` and `pers2`
+- `-scale scale1 scale2` will generate two files showing the most persistent components that include the scale thresholds `scale1` and `scale2`
+
+Add the option `-col` so that the colored PLY files are also generated. 
+To modify some parameters please check the help of the programs by running them with the option `-h`.
+
+<!-- 
 ## TODO
-- add documentations on the file format
-- add documentations on the different programs
-- improve documentation of the code
-
+- more documentations on the file format
+- improve documentation of the code 
+-->
