@@ -17,7 +17,7 @@ Abstract Modern acquisition techniques generate detailed point clouds that sampl
 
 ## Getting Started
 
-The script `replicate.sh` downloads the required dependencies, compile and install the code, and generates a subset of the data shown by the figures of the article.
+The script `replicate.sh` downloads the required dependencies, compile the code, and generates a subset of the data shown by the figures of the article.
 The following sections give some details on these different steps. 
 
 ### Depencencies
