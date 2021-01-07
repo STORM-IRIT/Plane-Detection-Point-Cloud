@@ -31,7 +31,7 @@ Other depencencies like [Eigen](https://gitlab.com/libeigen/eigen) and [Ponca](h
 
 ### Compilation
 
-To download the project, compile the code and install the programs in `/usr/local/bin` run the following commands  
+To download the project and compile the code run the following commands  
 ```
 git clone git@github.com:ThibaultLejemble/Plane-Detection-Point-Cloud.git
 cd Plane-Detection-Point-Cloud
@@ -39,7 +39,6 @@ mkdir build
 cd build
 cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr/local ..
 make -j 
-sudo make install
 ```
 
 Tested using
@@ -54,12 +53,13 @@ Tested using
 
 Several scripts available in the [figures](https://github.com/ThibaultLejemble/Plane-Detection-Point-Cloud/tree/main/figures) directory generate the data shown by a subset of the figures presented in the article **Persistence Analysis of Multi-scale Planar Structure Graph in Point Clouds [(PDF)](https://hal.archives-ouvertes.fr/hal-02490721/document)**.
 
-Once the project is compiled and installed (see above), run the following command from the [figures](https://github.com/ThibaultLejemble/Plane-Detection-Point-Cloud/tree/main/figures) directory
+Once the project is compiled (see above), run the following command from the [figures](https://github.com/ThibaultLejemble/Plane-Detection-Point-Cloud/tree/main/figures) directory
 ```
 ./generate.sh
 ```
-The resulting colored point clouds are contained in several PLY files `fig_*.ply`.
-Note that it takes around 40 minutes with 8 cores at 3.70GHz and 32G of RAM. 
+The resulting colored point clouds are contained in several PLY files `fig_*.ply` contained in one folder for each figure.
+
+<!-- Note that it takes around 40 minutes with 8 cores at 3.70GHz and 32G of RAM.  -->
 
 #### Process other 3D point clouds
 
