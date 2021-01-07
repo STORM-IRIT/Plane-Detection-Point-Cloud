@@ -59,6 +59,13 @@ Once the project is compiled (see above), run the following command from the [fi
 ```
 The resulting colored point clouds are contained in several PLY files `fig_*.ply` contained in one folder for each figure.
 
+The following images show the results for the Figure 15-b frome the folder `fig_015b`
+|-------------------------|--------------------------|--------------------------|-------------------------|
+|![](img/fig_15b_005.jpg) | ![](img/fig_15b_015.jpg) | ![](img/fig_15b_020.jpg) | ![](img/fig_15b_025.jpg)|
+|-------------------------|--------------------------|--------------------------|-------------------------|
+|`fig_15b_005.ply`        | `fig_15b_015.ply`        | `fig_15b_020.ply`        | `fig_15b_025.ply`       |
+|-------------------------|--------------------------|--------------------------|-------------------------|
+
 <!-- Note that it takes around 40 minutes with 8 cores at 3.70GHz and 32G of RAM.  -->
 
 #### Process other 3D point clouds
