@@ -42,10 +42,15 @@ make -j
 ```
 
 Tested using
+- Ubuntu 20.04.1 LTS
+  - cmake 3.16.3
+  - g++ 9.3.0
+  - CGAL 5.0.2
 - Debian GNU/Linux 10 (buster)
-- cmake 3.13.4
-- g++ 8.3.0
-- CGAL 5.1
+  - cmake 3.13.4
+  - g++ 8.3.0
+  - CGAL 5.1
+- MacOSX
 
 ### Usage
 
