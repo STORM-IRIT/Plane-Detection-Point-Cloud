@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include <cstdio>
+#include <PDPC/Common/DebugTrap.h>
 
 // macro delimiters
 #define PDPC_MACRO_START do {
@@ -12,7 +13,7 @@
 
 #define PDPC_CRASH                                                             \
     PDPC_MACRO_START                                                           \
-    asm volatile ("int $3");                                                   \
+    psnip_trap();                                                   \
     PDPC_MACRO_END
 
 #define PDPC_PRINT_ERROR(MSG)                                                  \
